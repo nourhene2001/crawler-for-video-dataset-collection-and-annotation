@@ -37,16 +37,6 @@ class YoutubeSpider(scrapy.Spider):
         # Make a request to a URL and execute the parse method when the response is received
         #specify the URL to request, the callback function to be executed when the response is received
         
-
-    #extracts vid urls requested so we can use them to extract infos with pytube in the parse_video function
-    #can also be done with youtube search api
-    """def parse(self, response):
-         videos = response.css('a.yt-simple-endpoint::attr(href)').getall()
-         
-         for video in videos:
-            video_url = f"https://www.youtube.com{video}"
-            yield scrapy.Request(video_url, callback=self.parse_video) """
-    
     #scrape additional info with pytube and download the video
     def parse_video(self, response):
         items=ScrapeItem()
