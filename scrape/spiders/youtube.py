@@ -12,9 +12,11 @@ class YoutubeSpider(scrapy.Spider):
 
     #set up the initial state of the spider , take the query as argument
      #query from the django app
-    def __init__(self, query):
+    def __init__(self, query, max_result,video_format):
         super().__init__(query)
         self.query=query
+        self.max_result=max_result
+        self.video_format=video_format
     
     #start_url should be result of that query
     def start_requests(self):
@@ -25,7 +27,7 @@ class YoutubeSpider(scrapy.Spider):
         #the parts of the resource to be returned in the API response
         part='id',
         #to be changed later !!!!!!!!!!!!!!!!!
-        maxResults=5
+        maxResults=self.max_result
         ).execute()
         video_ids = []
         for search_result in search_response.get('items', []):
@@ -43,9 +45,9 @@ class YoutubeSpider(scrapy.Spider):
         #url response from parse method
         try:
             video_url = response.url
-            #youtube obj with the video url provided
+                #youtube obj with the video url provided
             yt = YouTube(video_url)
-            #we extract the needed infos
+                #we extract the needed infos
             title=yt.title
             views = yt.views
             duration = yt.length
@@ -54,10 +56,15 @@ class YoutubeSpider(scrapy.Spider):
             items['views']=views
             items['duration']=duration
             items['description']=description
+                #stream = yt.streams.get_highest_resolution()
+                #stream=yt.streams.filter(file_extension='self.video_format')
+            # Download the video
+                #stream.download()
         except pytube.exceptions.VideoUnavailable:
-    # Handle the exception - skip this video
+        # Handle the exception - skip this video
             print(f"Video at URL  is unavailable. Skipping...")
         #stream = yt.streams.get_highest_resolution()
+        #stream=yt.streams.filter(file_extension='self.video_format')
         # Download the video
         #stream.download()
         yield items
