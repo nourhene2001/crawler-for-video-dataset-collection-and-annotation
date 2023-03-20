@@ -12,20 +12,23 @@ class YoutubeSpider(scrapy.Spider):
 
     #set up the initial state of the spider , take the query as argument
      #query from the django app
-    def __init__(self, query, max_result,video_format):
+    def __init__(self, query, max_result,duration):
         super().__init__(query)
         self.query=query
         self.max_result=max_result
-        self.video_format=video_format
+        self.duration=duration
     
+         
     #start_url should be result of that query
     def start_requests(self):
         youtube=build('youtube', 'v3', developerKey=os.environ.get('AIzaSyCt4dh_uoZ7rncyiftsOl4rmhksZ4w8eJ4'))
+        
         search_response = youtube.search().list(
         q=self.query,
         type='video',
         #the parts of the resource to be returned in the API response
-        part='id',
+        part='id,snippet',
+        videoDuration=self.duration,
         #to be changed later !!!!!!!!!!!!!!!!!
         maxResults=self.max_result
         ).execute()
