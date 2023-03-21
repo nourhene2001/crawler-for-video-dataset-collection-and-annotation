@@ -13,10 +13,10 @@ from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
 from django.http import HttpResponse, JsonResponse
 #fun to run the spider
-def run_spider(query,max_result,duration):
+def run_spider(query,max_items,duration):
     process = CrawlerProcess(get_project_settings())
     spider_cls = YoutubeSpider
-    process.crawl(spider_cls,query=query,max_result=max_result,duration=duration)
+    process.crawl(spider_cls,query=query,max_items=max_items,duration=duration)
     process.start()
     """json_path = os.path.join(os.getcwd(), '', 'data.json')
     with open(json_path, 'r') as f:
@@ -30,9 +30,9 @@ def search(request):
         form = QForm(request.POST)
         if form.is_valid():
             query = form.cleaned_data['query']
-            max_result=form.cleaned_data['max_result']
+            max_items=form.cleaned_data['max_items']
             duration=form.cleaned_data['duration']
-            p = Process(target=run_spider, args=(query,max_result,duration))
+            p = Process(target=run_spider, args=(query,max_items,duration))
             p.start()
             p.join()
             json_path = os.path.join(os.getcwd(), '', 'data.json')
