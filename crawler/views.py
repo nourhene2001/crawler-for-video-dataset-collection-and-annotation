@@ -36,7 +36,7 @@ def search(request):
             p.start()
             p.join()
             json_path = os.path.join(os.getcwd(), '', 'data.json')
-            with open('data.json', 'r') as f:
+            with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
             return render(request, 'result.html', {'data': data})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
