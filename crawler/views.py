@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
-from multiprocessing import Process
+import json
+from multiprocessing import Process, Manager
 import os
 import signal
 import threading
@@ -17,6 +18,11 @@ def run_spider(query,max_result,duration):
     spider_cls = YoutubeSpider
     process.crawl(spider_cls,query=query,max_result=max_result,duration=duration)
     process.start()
+    """json_path = os.path.join(os.getcwd(), '', 'data.json')
+    with open(json_path, 'r') as f:
+        result_data = f.read()
+    return result_data"""
+
 #the function that takes the query and start the spider
 def search(request):
     form=QForm()
@@ -29,11 +35,15 @@ def search(request):
             p = Process(target=run_spider, args=(query,max_result,duration))
             p.start()
             p.join()
-            csv_path = os.path.join(os.getcwd(), '', 'data.csv')
+            json_path = os.path.join(os.getcwd(), '', 'data.json')
+            with open('data.json', 'r') as f:
+                data = json.load(f)
+            return render(request, 'result.html', {'data': data})
+            """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
             with open(csv_path,encoding='utf-8') as csv_file:
                 response = HttpResponse(csv_file.read(), content_type='text/csv')
                 response['Content-Disposition'] = f'attachment; filename="{query}.csv"'
-                return response
+                return response"""
         else:
             form = QForm()
     return render(request, 'forms.html', {'form': form})

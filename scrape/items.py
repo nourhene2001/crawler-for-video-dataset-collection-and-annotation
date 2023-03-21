@@ -13,4 +13,5 @@ class ScrapeItem(scrapy.Item):
     views = scrapy.Field()
     duration = scrapy.Field()
     description = scrapy.Field()
+    url=scrapy.Field()
     pass
