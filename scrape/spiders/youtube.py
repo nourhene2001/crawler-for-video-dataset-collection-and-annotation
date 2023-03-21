@@ -55,11 +55,13 @@ class YoutubeSpider(scrapy.Spider):
             views = yt.views
             duration = yt.length
             description = yt.description
+            
             items['title']=title
             items['views']=views
             items['duration']=duration
             items['description']=description
             items['url']=video_url
+            
                 #stream = yt.streams.get_highest_resolution()
                 #stream=yt.streams.filter(file_extension='self.video_format')
             # Download the video
