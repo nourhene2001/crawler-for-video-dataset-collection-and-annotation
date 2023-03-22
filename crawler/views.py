@@ -1,17 +1,18 @@
-from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import Process
+import django
 import json
-from multiprocessing import Process, Manager
+
+
+django.setup()
 import os
-import signal
-import threading
-from unittest import signals
+from django import apps
 from django.shortcuts import render
 from scrapy import Spider
-from .forms import  QForm
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
-from django.http import HttpResponse, JsonResponse
+from .forms import  CheckForm, QForm
+from crawler.models import DataSerializer
 #fun to run the spider
 def run_spider(query,max_items,duration):
     process = CrawlerProcess(get_project_settings())
@@ -38,7 +39,12 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
-            return render(request, 'result.html', {'data': data})
+            serializer = DataSerializer(data=data)
+            if serializer.is_valid():
+                d = serializer.save()
+                d.save()
+            form1 = CheckForm() 
+            return render(request, 'result.html', {'data': data,'form1': form1})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
             with open(csv_path,encoding='utf-8') as csv_file:
                 response = HttpResponse(csv_file.read(), content_type='text/csv')
@@ -47,4 +53,3 @@ def search(request):
         else:
             form = QForm()
     return render(request, 'forms.html', {'form': form})
-#function retrieve data 

@@ -17,7 +17,7 @@
             <th>Description</th>
             <th>views</th>
             <th>url</th>
-            
+            <th>actions</th>
            
 
 
@@ -30,13 +30,17 @@
                   <td>{{ item.description }}</td>
                   <td>{{ item.views }}</td>
                   <td><a href="{{ item.url }}">{{item.url}}</a></td>
-                  
+                  <td>
+                    <button>delete</button>
+                  </td>
                   
               </tr>
           {% endfor %}
       
     </table>
-    <form>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form1.as_ul }}
         <button type="submit">Submit</button>
     </form>
 </body>

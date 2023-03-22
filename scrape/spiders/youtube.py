@@ -3,7 +3,6 @@ import scrapy
 import pytube
 from pytube import YouTube
 from googleapiclient.discovery import build
-
 from scrape.items import ScrapeItem
 class YoutubeSpider(scrapy.Spider):
     name = "youtube"
@@ -12,10 +11,10 @@ class YoutubeSpider(scrapy.Spider):
 
     #set up the initial state of the spider , take the query as argument
      #query from the django app
-    def __init__(self, query, max_result,duration):
+    def __init__(self, query, max_items,duration):
         super().__init__(query)
         self.query=query
-        self.max_result=max_result
+        self.max_items=max_items
         self.duration=duration
     
          
@@ -30,7 +29,7 @@ class YoutubeSpider(scrapy.Spider):
         part='id,snippet',
         videoDuration=self.duration,
         #to be changed later !!!!!!!!!!!!!!!!!
-        maxResults=self.max_result
+        maxResults=self.max_items
         ).execute()
         video_ids = []
         for search_result in search_response.get('items', []):
