@@ -15,7 +15,4 @@ class dataModel(models.Model):
 
 
 
-class CheckModel(models.Model):
-    videoformat = models.BooleanField(default=True)
-    resolution = models.BooleanField(default=True)
-    content_type = models.BooleanField(default=True)
+

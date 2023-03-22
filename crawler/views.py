@@ -9,7 +9,7 @@ from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
-from .forms import  CheckForm, QForm, dataForm
+from .forms import   QForm, dataForm
 
 from crawler.models import dataModel
 #fun to run the spider
@@ -46,8 +46,8 @@ def search(request):
                 data=dataModel.objects.all()
             for element in data:
                 element.selected = True
-            form1 = CheckForm() 
-            return render(request, 'result.html', {'data': data,'form1': form1})
+            form1=dataForm()
+            return render(request, 'result.html', {'data': data,'form1':form1})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
             with open(csv_path,encoding='utf-8') as csv_file:
                 response = HttpResponse(csv_file.read(), content_type='text/csv')
@@ -64,5 +64,8 @@ def search(request):
             videoformat = form.cleaned_data['videoformat']
             resolution=form.cleaned_data['resolution']
             content_type=form.cleaned_data['content_type']
-            if videoformat == True :"""
+            if videoformat.selected :
+            CheckForm.save()
+                
+                """
 
