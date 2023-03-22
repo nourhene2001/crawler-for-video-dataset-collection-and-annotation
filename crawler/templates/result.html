@@ -1,23 +1,27 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 <head>
     <title></title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </head>
 <body>
     <h1>results table</h1>
     <table class="table table-striped">
         <tr>
+            <th>    </th>
             <th>Title</th>
             <th>duration(in seconds)</th>
             <th>Description</th>
             <th>views</th>
             <th>url</th>
-            <th>actions</th>
+            
            
 
 
@@ -25,22 +29,32 @@
           
           {% for item in data %}
               <tr>
+                
+                    <td><input type="checkbox" checked name="selected_elements" value="{{ item.title }}"></td>
+                  
                   <td>{{ item.title }}</td>
                   <td>{{item.duration}}</td>
                   <td>{{ item.description }}</td>
                   <td>{{ item.views }}</td>
                   <td><a href="{{ item.url }}">{{item.url}}</a></td>
-                  <td>
-                    <button>delete</button>
-                  </td>
+                  
                   
               </tr>
           {% endfor %}
       
     </table>
+    <h1>choose the properties you want to adjust : </h1>
     <form method="POST">
         {% csrf_token %}
         {{ form1.as_ul }}
-        <button type="submit">Submit</button>
+        <button type="button" >
+            Done
+          </button>
+
     </form>
-</body>
+   
+      
+   
+    
+   </body>
+   

@@ -9,7 +9,7 @@ from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
-from .forms import  CheckForm, QForm
+from .forms import  CheckForm, QForm, dataForm
 
 from crawler.models import dataModel
 #fun to run the spider
@@ -33,20 +33,19 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
+            dataModel.objects.all().delete()
             for item in data:
-                title = item['title']
-                views = item['views']
-                duration = item['duration']
-                description = item['description']
-                url = item['url']
                 new_data = dataModel.objects.create(
-                    title=title,
-                    views=views,
-                    duration=duration,
-                    description=description,
-                    url=url
+                    title=item['title'],
+                    views=item['views'],
+                    duration=item['duration'],
+                    description=item['description'],
+                    url=item['url']
                 )
                 new_data.save()
+                data=dataModel.objects.all()
+            for element in data:
+                element.selected = True
             form1 = CheckForm() 
             return render(request, 'result.html', {'data': data,'form1': form1})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
@@ -57,3 +56,13 @@ def search(request):
         else:
             form = QForm()
     return render(request, 'forms.html', {'form': form})
+"""def check(request):
+    form=CheckForm()
+    if request.method == 'POST':
+        form = CheckForm(request.POST)
+        if form.is_valid():
+            videoformat = form.cleaned_data['videoformat']
+            resolution=form.cleaned_data['resolution']
+            content_type=form.cleaned_data['content_type']
+            if videoformat == True :"""
+
