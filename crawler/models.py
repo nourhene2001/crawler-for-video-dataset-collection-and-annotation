@@ -13,6 +13,7 @@ class dataModel(models.Model):
     OPTIONS2=[('1',"720p"),('2',"480p"),('3',"360p")]
     videoformat = models.CharField(max_length=20, choices=OPTIONS1)
     resolution = models.CharField(max_length=20, choices=OPTIONS2)
+    #dataset_name=models.CharField(max_length=255)
 
 
 

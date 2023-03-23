@@ -45,8 +45,6 @@ def search(request):
                 )
                 new_data.save()
                 data=dataModel.objects.all()
-            for element in data:
-                element.selected = True
             form1=dataForm()
             return render(request, 'result.html', {'data': data,'form1':form1})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
@@ -60,20 +58,20 @@ def search(request):
 def check(request):
     form = dataForm()
     if request.method == 'POST':
-        selected_elements = request.POST.getlist('selected_elements')
         form = dataForm(request.POST)
+        selected_elements = request.POST.getlist('selected_elements')
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
-        # Delete elements that are not selected
             dataModel.objects.exclude(id__in=selected_elements).delete()
-            # Update the fields for selected elements
             dataModel.objects.filter(id__in=selected_elements).update(videoformat=videoformat, resolution=resolution)
-            return redirect('check')
+            data = dataModel.objects.all()
+            return render(request, 'result.html', {'data': data})
     else:
         data = dataModel.objects.all()
         d='not working'
         return render(request, 'result.html', {'data': data,'d':d})
+
 
 
                 

@@ -17,7 +17,13 @@
       $('#myModal').on('shown.bs.modal', function () {
         $('#myInput').trigger('focus')
       })
+      $('#myModalSubmitBtn').on('click', function(event) {
+      event.preventDefault();
+      $('#form1').submit();
+      $('#form2').submit();
     });
+  });
+    
     </script>
     
 
@@ -25,6 +31,8 @@
 </head>
 <body>
     <h1>results table {{d}}</h1>
+    <form method="POST" id="form2" action="{% url 'check' %}">
+        {% csrf_token %}
     <table class="table table-striped">
         <tr>
             <th>    </th>
@@ -55,7 +63,7 @@
           {% endfor %}
       
     </table>
-    
+    </form>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Done</button>
     
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -68,10 +76,11 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method='POST' action="{% url 'check' %}">
+              <form id="form1" method='POST' action="{% url 'check' %}">
                 {% csrf_token %}
                 {{ form1.as_p }}
-                <button type="submit">Submit</button>
+                <p>the choice of a dataset will be here</p>
+                <button id="myModalSubmitBtn" type="submit">Submit</button>
               </form>
             </div>
             
