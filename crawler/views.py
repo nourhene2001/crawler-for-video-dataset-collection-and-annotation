@@ -4,7 +4,7 @@ import json
 django.setup()
 import os
 from django import apps
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
@@ -60,15 +60,20 @@ def search(request):
 def check(request):
     form = dataForm()
     if request.method == 'POST':
-        form = dataForm(request.POST)
         selected_elements = request.POST.getlist('selected_elements')
+        form = dataForm(request.POST)
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
+        # Delete elements that are not selected
             dataModel.objects.exclude(id__in=selected_elements).delete()
+            # Update the fields for selected elements
             dataModel.objects.filter(id__in=selected_elements).update(videoformat=videoformat, resolution=resolution)
-
-        return render(request, 'result.html')
+            return redirect('check')
+    else:
+        data = dataModel.objects.all()
+        d='not working'
+        return render(request, 'result.html', {'data': data,'d':d})
 
 
                 
