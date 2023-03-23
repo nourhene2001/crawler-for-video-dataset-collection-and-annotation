@@ -36,6 +36,7 @@ def search(request):
             dataModel.objects.all().delete()
             for item in data:
                 new_data = dataModel.objects.create(
+                    
                     title=item['title'],
                     views=item['views'],
                     duration=item['duration'],
@@ -56,16 +57,19 @@ def search(request):
         else:
             form = QForm()
     return render(request, 'forms.html', {'form': form})
-"""def check(request):
-    form=CheckForm()
+def check(request):
+    form = dataForm()
     if request.method == 'POST':
-        form = CheckForm(request.POST)
+        form = dataForm(request.POST)
+        selected_elements = request.POST.getlist('selected_elements')
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
-            resolution=form.cleaned_data['resolution']
-            content_type=form.cleaned_data['content_type']
-            if videoformat.selected :
-            CheckForm.save()
+            resolution = form.cleaned_data['resolution']
+            dataModel.objects.exclude(id__in=selected_elements).delete()
+            dataModel.objects.filter(id__in=selected_elements).update(videoformat=videoformat, resolution=resolution)
+
+        return render(request, 'result.html')
+
+
                 
-                """
 

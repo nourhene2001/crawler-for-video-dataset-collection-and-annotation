@@ -16,11 +16,11 @@ class QForm(forms.Form):
 class dataForm(forms.ModelForm):
     class Meta:
         model= dataModel
-        fields={"videoformat","resolution","content_type"} 
+        fields={"videoformat","resolution"} 
         widgets = {
             'videoformat': forms.Select(choices=dataModel.OPTIONS1),
             'resolution': forms.Select(choices=dataModel.OPTIONS1),
-            'content_type': forms.Select(attrs={'class': 'form-control'}),
+            
         }
 
     

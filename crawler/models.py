@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class dataModel(models.Model):
+    id=models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     views = models.IntegerField()
     duration = models.CharField(max_length=255)
