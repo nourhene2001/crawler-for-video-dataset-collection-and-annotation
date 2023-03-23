@@ -1,6 +1,8 @@
 from multiprocessing import Process
 import django
 import json
+
+from django.http import HttpResponse
 django.setup()
 import os
 from django import apps
@@ -44,6 +46,7 @@ def search(request):
                     url=item['url']
                 )
                 new_data.save()
+               
                 data=dataModel.objects.all()
             form1=dataForm()
             return render(request, 'result.html', {'data': data,'form1':form1})
@@ -59,19 +62,23 @@ def check(request):
     form = dataForm()
     if request.method == 'POST':
         form = dataForm(request.POST)
+        if form.errors:
+            print(form.errors)
         selected_elements = request.POST.getlist('selected_elements')
+        print(selected_elements)
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
+            print(videoformat)
             dataModel.objects.exclude(id__in=selected_elements).delete()
             dataModel.objects.filter(id__in=selected_elements).update(videoformat=videoformat, resolution=resolution)
             data = dataModel.objects.all()
-            return render(request, 'result.html', {'data': data})
+            return render(request, 'result.html', {'data': data,'form1':form})
     else:
         data = dataModel.objects.all()
-        d='not working'
-        return render(request, 'result.html', {'data': data,'d':d})
-
+        
+    return render(request, 'result.html')
+    
 
 
                 

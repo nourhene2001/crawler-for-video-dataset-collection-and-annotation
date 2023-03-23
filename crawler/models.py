@@ -6,14 +6,15 @@ class dataModel(models.Model):
     title = models.CharField(max_length=100)
     views = models.IntegerField()
     duration = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=10000,null=True,blank=True)
     url = models.CharField(max_length=255)
-    content_type = models.CharField(max_length=50)
-    OPTIONS1=[('1',"mp4"),('2',"WebM"),('3',"3GP")]
-    OPTIONS2=[('1',"720p"),('2',"480p"),('3',"360p")]
-    videoformat = models.CharField(max_length=20, choices=OPTIONS1)
-    resolution = models.CharField(max_length=20, choices=OPTIONS2)
+    content_type = models.CharField(max_length=50,null=True,blank=True,default='')
+    OPTIONS1=[('mp4',"mp4"),('WebM',"WebM"),('3GP',"3GP")]
+    OPTIONS2=[('720p',"720p"),('480p',"480p"),('360p',"360p")]
+    videoformat = models.CharField(max_length=20, choices=OPTIONS1,default="mp4")
+    resolution = models.CharField(max_length=20, choices=OPTIONS2,default="720p")
     #dataset_name=models.CharField(max_length=255)
+   
 
 
 
