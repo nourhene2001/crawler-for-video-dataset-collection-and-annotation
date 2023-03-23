@@ -24,7 +24,7 @@
 
 </head>
 <body>
-    <h1>results table</h1>
+    <h1>results table {{d}}</h1>
     <table class="table table-striped">
         <tr>
             <th>    </th>
@@ -68,7 +68,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="POST">
+              <form method='POST' action="{% url 'check' %}">
                 {% csrf_token %}
                 {{ form1.as_p }}
                 <button type="submit">Submit</button>
