@@ -32,7 +32,7 @@ ul {
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width:100%;
+    width: 100px;;
     font-size: 16px;
   }
   button[type="submit"] {
@@ -44,7 +44,7 @@ ul {
     cursor: pointer;
     font-size: 16px;
     text-align: center;
-    width:300px;
+    width: 100px;;
   }
   button[type="submit"]:hover {
     background-color: #867070;
