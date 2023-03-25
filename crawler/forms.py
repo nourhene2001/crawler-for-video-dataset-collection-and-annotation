@@ -1,6 +1,10 @@
 from django import forms
 from crawler.models import dataModel
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 class QForm(forms.Form):
     query = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'placeholder': 'what are you looking for ?'}))
     #content_type = forms.BooleanField(label='content type', required=False)
@@ -24,3 +28,6 @@ class dataForm(forms.ModelForm):
         }
 
     
+
+
+

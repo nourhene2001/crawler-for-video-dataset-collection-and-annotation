@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class dataModel(models.Model):
-    id=models.AutoField(primary_key=True)
+    v_id=models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     views = models.IntegerField()
     duration = models.CharField(max_length=255)
@@ -13,8 +13,18 @@ class dataModel(models.Model):
     OPTIONS2=[('720p',"720p"),('480p',"480p"),('360p',"360p")]
     videoformat = models.CharField(max_length=20, choices=OPTIONS1,default="mp4")
     resolution = models.CharField(max_length=20, choices=OPTIONS2,default="720p")
+    datasets = models.ManyToManyField('datasetModel')
     #dataset_name=models.CharField(max_length=255)
-   
+class datasetModel(models.Model):
+    d_id=models.AutoField(primary_key=True)
+    name= models.CharField(max_length=255)
+    creation_date=models.TimeField()
+    num_video=models.IntegerField()
+
+
+
+
+
 
 
 
