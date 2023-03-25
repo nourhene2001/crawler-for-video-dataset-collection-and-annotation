@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class dataModel(models.Model):
-    v_id=models.AutoField(primary_key=True)
+    id=models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     views = models.IntegerField()
     duration = models.CharField(max_length=255)
@@ -16,7 +16,7 @@ class dataModel(models.Model):
     datasets = models.ManyToManyField('datasetModel')
     #dataset_name=models.CharField(max_length=255)
 class datasetModel(models.Model):
-    d_id=models.AutoField(primary_key=True)
+    id=models.AutoField(primary_key=True)
     name= models.CharField(max_length=255)
     creation_date=models.TimeField()
     num_video=models.IntegerField()

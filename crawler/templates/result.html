@@ -30,9 +30,10 @@
 
 </head>
 <body>
+  <form id="form1" method='post'  action="{% url 'check' %}">
+  {% csrf_token %}
     <h1>results table {{d}}</h1>
-    <form id="form1" method='post'  action="{% url 'check' %}">
-        {% csrf_token %}
+    
     <table class="table table-striped">
         <tr>
             <th>    </th>
@@ -77,12 +78,16 @@
               </button>
             </div>
             <div class="modal-body">
-              
+              <div class="row">
+                <div class="col-md-6">
                 {% csrf_token %}
                 {{ form1.as_p }}
+                </div>
+                <div class="col-md-6">
                 <p>the choice of a dataset will be here</p>
+                </div>
                 <button id="myModalSubmitBtn" type="submit">Submit</button>
-              </form>
+              
               
             </div>
             
@@ -95,6 +100,6 @@
    
       
    
-    
+    </form>
    </body>
    

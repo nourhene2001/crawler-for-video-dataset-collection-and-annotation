@@ -3,6 +3,7 @@ import django
 import json
 
 from django.http import HttpResponse
+from httplib2 import Authentication
 django.setup()
 import os
 from django import apps
@@ -12,8 +13,15 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
 from .forms import   QForm, dataForm
-
+from django.contrib.auth.decorators import login_required
 from crawler.models import dataModel
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import RegistrationForm
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+
+
 #fun to run the spider
 def run_spider(query,max_items,duration):
     process = CrawlerProcess(get_project_settings())
@@ -21,6 +29,7 @@ def run_spider(query,max_items,duration):
     process.crawl(spider_cls,query=query,max_items=max_items,duration=duration)
     process.start()
 #the function that takes the query and start the spider
+@login_required
 def search(request):
     form=QForm()
     if request.method == 'POST':
@@ -58,6 +67,7 @@ def search(request):
         else:
             form = QForm()
     return render(request, 'forms.html', {'form': form})
+@login_required
 def check(request):
     form = dataForm()
     if request.method == 'POST':
@@ -80,6 +90,33 @@ def check(request):
     return render(request, 'result.html')
     
 
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = RegistrationForm()
+    return render(request, 'register.html', {'form': form})
+
+def login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                auth_login(request,user)
+                return redirect('search')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+def logout(request):
+    auth_logout(request)
+    return redirect('search')
 
                 
 

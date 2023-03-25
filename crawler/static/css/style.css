@@ -4,7 +4,7 @@ ul {
 }
 .search-box {
     position: absolute;
-    top: 35%;
+    margin-top: 35%;
     left: 50%;
     width: 400px;
     padding: 30px;
@@ -16,7 +16,7 @@ ul {
     border-radius: 10px;
     
   }
-  
+ 
   label {
     display: block;
     margin-top: 10px;
@@ -25,13 +25,14 @@ ul {
   input[type="text"],
   input[type="email"],
   input[type="number"],
+  input[type="password"],
   select,
   textarea {
     
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width:300px;
+    width:100%;
     font-size: 16px;
   }
   button[type="submit"] {
