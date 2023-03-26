@@ -1,5 +1,5 @@
 from django import forms
-from crawler.models import dataModel
+from crawler.models import dataModel, datasetModel
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -44,7 +44,24 @@ class RegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
-   
-
+   #new dataset
+class datasetForm1(forms.ModelForm):
+    class Meta:
+        model=datasetModel
+        fields={"name"}
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name'}),
+        }
+        #when he wants to store in an existing dataset
+class datasetForm2(forms.ModelForm):
+    name = forms.ChoiceField(choices=[])
+    class Meta :
+        model = datasetModel
+        fields={"name"}
+    def __init__(self):
+        super().__init__()
+        name =datasetModel.objects.values_list('name', flat=True)
+        choices = [(m, m) for m in name]
+        self.fields['name'].choices = choices
 
 

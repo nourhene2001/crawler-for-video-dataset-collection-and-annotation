@@ -4,11 +4,11 @@ ul {
 }
 .search-box {
     position: absolute;
-    margin-top: 35%;
+    top: 35%;
     left: 50%;
-    width: 400px;
+    
     padding: 30px;
-    margin: 20px auto;
+    margin: 50px ;
     transform: translate(-50%, -55%);
     background: #867070;
     box-sizing: border-box;
@@ -28,13 +28,13 @@ ul {
   input[type="password"],
   select,
   textarea {
-    
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width: 100px;;
+    width: 100%;
     font-size: 16px;
   }
+
   button[type="submit"] {
     background-color: #D5B4B4;
     color: white;
@@ -44,13 +44,38 @@ ul {
     cursor: pointer;
     font-size: 16px;
     text-align: center;
-    width: 100px;;
+    display: flex;
+    justify-content: center;
+    width: 80%;
   }
   button[type="submit"]:hover {
+    background-color: #867070;
+  }
+  button[type="button"]{
+    background-color: #D5B4B4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 700;
+    font-family: Helvetica,"sans-serif";
+    margin:20px;
+    width: 200px;
+  }
+  button[type="button"]:hover {
     background-color: #867070;
   }
 .table{
 
 font-size: x-small;
   }
+  .col-md-8{
+    text-align: center;
+    display: block;
+    
 
+  }
+  

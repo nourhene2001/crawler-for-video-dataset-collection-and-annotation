@@ -12,7 +12,7 @@ from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
-from .forms import   QForm, dataForm
+from .forms import   QForm, dataForm, datasetForm1, datasetForm2
 from django.contrib.auth.decorators import login_required
 from crawler.models import dataModel
 from django.shortcuts import render, redirect
@@ -58,7 +58,9 @@ def search(request):
                
                 data=dataModel.objects.all()
             form1=dataForm()
-            return render(request, 'result.html', {'data': data,'form1':form1})
+            form2=datasetForm1()
+            form3=datasetForm2()
+            return render(request, 'result.html', {'data': data,'form1':form1,'form2':form2,'form3':form3})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
             with open(csv_path,encoding='utf-8') as csv_file:
                 response = HttpResponse(csv_file.read(), content_type='text/csv')
@@ -88,7 +90,15 @@ def check(request):
         data = dataModel.objects.all()
         
     return render(request, 'result.html')
-    
+#for form of datasets:
+"""def datasetconfig(request):
+    form=datasetForm1()
+    form=datasetForm2()
+    if request.method == 'POST':
+        form = datasetForm1(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']"""
+
 
 def register(request):
     if request.method == 'POST':
