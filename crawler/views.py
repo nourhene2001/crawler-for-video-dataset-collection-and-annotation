@@ -91,13 +91,7 @@ def check(request):
         
     return render(request, 'result.html')
 #for form of datasets:
-"""def datasetconfig(request):
-    form=datasetForm1()
-    form=datasetForm2()
-    if request.method == 'POST':
-        form = datasetForm1(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']"""
+
 
 
 def register(request):
