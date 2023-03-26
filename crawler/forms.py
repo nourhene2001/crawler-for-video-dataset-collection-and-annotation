@@ -52,7 +52,7 @@ class datasetForm1(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name'}),
         }
-        #when he wants to store in an existing dataset
+    #when he wants to store in an existing dataset
 class datasetForm2(forms.ModelForm):
     name = forms.ChoiceField(choices=[])
     class Meta :
