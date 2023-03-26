@@ -46,7 +46,7 @@ ul {
     text-align: center;
     display: flex;
     justify-content: center;
-    width: 80%;
+    width: 100%;
   }
   button[type="submit"]:hover {
     background-color: #867070;

@@ -18,7 +18,7 @@ class dataModel(models.Model):
 class datasetModel(models.Model):
     id=models.AutoField(primary_key=True)
     name= models.CharField(max_length=255)
-    creation_date=models.TimeField()
+    creation_date=models.DateTimeField()
     num_video=models.IntegerField()
 
 

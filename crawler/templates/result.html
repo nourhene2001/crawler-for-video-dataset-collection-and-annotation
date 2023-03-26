@@ -19,13 +19,18 @@
       $('#myModal').on('shown.bs.modal', function () {
         $('#myInput').trigger('focus')
       })
-      $('#myModalSubmitBtn').on('click', function(event) {
+      $('#m1').on('click', function(event) {
       event.preventDefault();
       $('#form1').submit();
       
     });
-  });
-  $(document).ready(function(){
+ 
+  $('#m2').on('click', function(event) {
+      event.preventDefault();
+      $('#form1').submit();
+      
+    });
+
     $('.new, .existing').hide(); // hide both divs initially
     $('button').click(function(){
         if($(this).attr('id') == 'new'){
@@ -41,9 +46,8 @@
             $('.option').hide(); // hide the button that was clicked
         }
     });
-});
 
-
+  });
   
   
 
@@ -128,13 +132,13 @@
                   <div class="new" >
                     {% csrf_token %}
                 {{ form2.as_p }}
-                <button id="myModalSubmitBtn" type="submit">Submit</button>
+                <button id="m1" type="submit">Submit</button>
                   </div>
                   
                   <div class="existing" >
                     {% csrf_token %}
                     {{ form3.as_p }}
-                    <button id="myModalSubmitBtn" type="submit">Submit</button>
+                    <button id="m2" type="submit">Submit</button>
                   </div>
                   
               

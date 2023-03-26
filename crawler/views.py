@@ -1,3 +1,4 @@
+import datetime
 from multiprocessing import Process
 import django
 import json
@@ -14,7 +15,7 @@ from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
 from .forms import   QForm, dataForm, datasetForm1, datasetForm2
 from django.contrib.auth.decorators import login_required
-from crawler.models import dataModel
+from crawler.models import dataModel, datasetModel
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
@@ -74,26 +75,65 @@ def check(request):
     form = dataForm()
     if request.method == 'POST':
         form = dataForm(request.POST)
-        if form.errors:
-            print(form.errors)
         selected_elements = request.POST.getlist('selected_elements')
-        print(selected_elements)
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
-            print(videoformat)
             dataModel.objects.exclude(id__in=selected_elements).delete()
             dataModel.objects.filter(id__in=selected_elements).update(videoformat=videoformat, resolution=resolution)
-            data = dataModel.objects.all()
-            return render(request, 'result.html', {'data': data,'form1':form})
+            if 'm1' in request.POST:
+                print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                form1 = datasetForm1(request.POST)
+                if form1.is_valid():
+                    obj.num_video = 0
+                    obj=datasetModel()
+                    name=form1.cleaned_data['name']
+                    print(name)
+                    obj.name=name
+                    obj.creation_date=datetime.now()
+                    obj.num_video=dataModel.objects.filter(id__in=selected_elements).count()
+                    obj.save()
+                    dataModel.objects.filter(id__in=selected_elements).update(datasets=name)
+                    #zydha ll vid fl model 7asb id 
+                    return redirect('check')
+            elif 'm2' in request.POST:
+                print('????????????????????????????????????')
+                form2 = datasetForm2(request.POST)
+                if form2.is_valid():
+                    name=form2.cleaned_data('name')
+                    dataModel.objects.filter(id__in=selected_elements).update(datasets=name)
+                    obj=datasetModel()
+                    obj.num_video=obj.num_video+dataModel.objects.filter(id__in=selected_elements).count()
+                    obj.save()
+                    return redirect('check')
     else:
         data = dataModel.objects.all()
-        
     return render(request, 'result.html')
 #for form of datasets:
+def datasetconfig(request):
+    if request.method == 'POST':
+        if 'm1' in request.POST:
+            form1 = datasetForm1(request.POST)
+            if form1.is_valid():
+                obj=datasetModel()
+                obj.name=form1.cleaned_data('name')
+                obj.creation_date=datetime.now()
+                obj.save()
+                obj1=dataModel()
+                #zydha ll vid fl model 7asb id 
+                return redirect('check')
+        elif 'm2' in request.POST:
+            form2 = datasetForm2(request.POST)
+            if form2.is_valid():
+                name=form2.cleaned_data('name')
+                # handle form2 data
+                return redirect('check')
+    else:
+        form1 = datasetForm1()
+        form2 = datasetForm2()
+    return render(request, 'check')
 
-
-
+#register view
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -103,7 +143,7 @@ def register(request):
     else:
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
-
+#login view
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -117,7 +157,7 @@ def login(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
-
+#logout view
 def logout(request):
     auth_logout(request)
     return redirect('search')
