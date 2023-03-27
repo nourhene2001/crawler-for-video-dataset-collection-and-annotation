@@ -73,65 +73,49 @@ def search(request):
 @login_required
 def check(request):
     form = dataForm()
+    form1 = datasetForm1()
+    form2 = datasetForm2()
     if request.method == 'POST':
         form = dataForm(request.POST)
         selected_elements = request.POST.getlist('selected_elements')
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
+            selected_data=dataModel.objects.filter(id__in=selected_elements)
             dataModel.objects.exclude(id__in=selected_elements).delete()
-            dataModel.objects.filter(id__in=selected_elements).update(videoformat=videoformat, resolution=resolution)
+            selected_data.update(videoformat=videoformat, resolution=resolution)
             if 'm1' in request.POST:
                 print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                 form1 = datasetForm1(request.POST)
                 if form1.is_valid():
                     obj.num_video = 0
                     obj=datasetModel()
-                    name=form1.cleaned_data['name']
+                    name=form1.cleaned_data.get('name')
                     print(name)
                     obj.name=name
                     obj.creation_date=datetime.now()
-                    obj.num_video=dataModel.objects.filter(id__in=selected_elements).count()
+                    obj.num_video=selected_data.count()
+                    for data in selected_data:
+                        data.datasets.set(obj)
                     obj.save()
-                    dataModel.objects.filter(id__in=selected_elements).update(datasets=name)
+                    
                     #zydha ll vid fl model 7asb id 
                     return redirect('check')
             elif 'm2' in request.POST:
                 print('????????????????????????????????????')
                 form2 = datasetForm2(request.POST)
                 if form2.is_valid():
-                    name=form2.cleaned_data('name')
-                    dataModel.objects.filter(id__in=selected_elements).update(datasets=name)
+                    name=form2.cleaned_data.get('name')
                     obj=datasetModel()
-                    obj.num_video=obj.num_video+dataModel.objects.filter(id__in=selected_elements).count()
+                    obj.num_video=obj.num_video+selected_data.count()
+                    for data in selected_data:
+                        data.datasets.set(obj)
                     obj.save()
                     return redirect('check')
     else:
         data = dataModel.objects.all()
     return render(request, 'result.html')
 #for form of datasets:
-def datasetconfig(request):
-    if request.method == 'POST':
-        if 'm1' in request.POST:
-            form1 = datasetForm1(request.POST)
-            if form1.is_valid():
-                obj=datasetModel()
-                obj.name=form1.cleaned_data('name')
-                obj.creation_date=datetime.now()
-                obj.save()
-                obj1=dataModel()
-                #zydha ll vid fl model 7asb id 
-                return redirect('check')
-        elif 'm2' in request.POST:
-            form2 = datasetForm2(request.POST)
-            if form2.is_valid():
-                name=form2.cleaned_data('name')
-                # handle form2 data
-                return redirect('check')
-    else:
-        form1 = datasetForm1()
-        form2 = datasetForm2()
-    return render(request, 'check')
 
 #register view
 def register(request):

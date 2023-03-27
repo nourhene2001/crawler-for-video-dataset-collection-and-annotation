@@ -15,21 +15,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNSG+2h" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script>
-    $(document).ready(function() {
-      $('#myModal').on('shown.bs.modal', function () {
-        $('#myInput').trigger('focus')
-      })
-      $('#m1').on('click', function(event) {
-      event.preventDefault();
-      $('#form1').submit();
-      
+$(document).ready(function() {
+  $('#m1').click(function(e) {
+    e.preventDefault();
+    $('#form1').submit();
+    });
+  
+
+  $('#m2').click(function(e) {
+    e.preventDefault();
+    $('#form1').submit();
     });
  
-  $('#m2').on('click', function(event) {
-      event.preventDefault();
-      $('#form1').submit();
-      
-    });
+
+
 
     $('.new, .existing').hide(); // hide both divs initially
     $('button').click(function(){
@@ -57,10 +56,11 @@
 
 </head>
 <body>
-  
-    <h1>results table {{d}}</h1>
-    <form id="form1" method='post'  action="{% url 'check' %}">
-      {% csrf_token %}
+  <form id="form1" method='POST'  action="{% url 'check' %}">
+    {% csrf_token %}
+    <h1>results table </h1>
+    
+      
     <table class="table table-striped">
         <tr>
             <th>    </th>
@@ -107,9 +107,12 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-md-4">
+                  
                 {% csrf_token %}
                 {{ form1.as_p }}
+                
                 </div>
+
                 <div class="col-md-8">
                   <div class="option">
                   <label for="dataset_option">Choose a dataset option:</label> 
@@ -129,19 +132,24 @@
                     </svg>
                   </button>
                 </div>
-                  <div class="new" >
+
+                <div class="new" >
+                  
                     {% csrf_token %}
                 {{ form2.as_p }}
-                <button id="m1" type="submit">Submit</button>
+                <button name="m1" id="m1" type="submit">Submit</button>
+                  
+          
                   </div>
                   
-                  <div class="existing" >
+                  <div class="existing">
+                 
                     {% csrf_token %}
                     {{ form3.as_p }}
-                    <button id="m2" type="submit">Submit</button>
-                  </div>
+                    <button name="m2" id="m2" type="submit">Submit</button>
                   
-              
+                  
+              </div>
                 </div>
                 
               
@@ -155,7 +163,7 @@
    
    
       
-   
-    </form>
+   </div>
+  </form>
    </body>
    
