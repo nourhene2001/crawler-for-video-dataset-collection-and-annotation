@@ -1,4 +1,4 @@
-import datetime
+
 from multiprocessing import Process
 import django
 import json
@@ -21,7 +21,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-
+from datetime import datetime
 
 #fun to run the spider
 def run_spider(query,max_items,duration):
@@ -88,30 +88,31 @@ def check(request):
                 print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                 form1 = datasetForm1(request.POST)
                 if form1.is_valid():
-                    obj.num_video = 0
                     obj=datasetModel()
+                    obj.num_video = 0
                     name=form1.cleaned_data.get('name')
                     print(name)
                     obj.name=name
                     obj.creation_date=datetime.now()
                     obj.num_video=selected_data.count()
-                    for data in selected_data:
-                        data.datasets.set(obj)
                     obj.save()
-                    
+                    for data in selected_data:
+                        data.datasets.add(obj)
                     #zydha ll vid fl model 7asb id 
                     return redirect('check')
             elif 'm2' in request.POST:
                 print('????????????????????????????????????')
                 form2 = datasetForm2(request.POST)
                 if form2.is_valid():
-                    name=form2.cleaned_data.get('name')
+                    name=form2.cleaned_data['name']
                     obj=datasetModel()
                     obj.num_video=obj.num_video+selected_data.count()
-                    for data in selected_data:
-                        data.datasets.set(obj)
                     obj.save()
+                    for data in selected_data:
+                        data.datasets.add(obj)
+                    
                     return redirect('check')
+            
     else:
         data = dataModel.objects.all()
     return render(request, 'result.html')

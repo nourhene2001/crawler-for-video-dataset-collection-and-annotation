@@ -17,9 +17,11 @@ class dataModel(models.Model):
     #dataset_name=models.CharField(max_length=255)
 class datasetModel(models.Model):
     id=models.AutoField(primary_key=True)
-    name= models.CharField(max_length=255)
+    name= models.CharField(max_length=255,choices=[])
     creation_date=models.DateTimeField()
     num_video=models.IntegerField()
+    def __iter__(self):
+        return iter(self.data)
 
 
 

@@ -58,8 +58,8 @@ class datasetForm2(forms.ModelForm):
     class Meta :
         model = datasetModel
         fields={"name"}
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__( *args, **kwargs)
         name =datasetModel.objects.values_list('name', flat=True)
         choices = [(m, m) for m in name]
         self.fields['name'].choices = choices
