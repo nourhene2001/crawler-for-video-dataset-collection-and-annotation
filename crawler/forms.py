@@ -55,13 +55,19 @@ class datasetForm1(forms.ModelForm):
     #when he wants to store in an existing dataset
 class datasetForm2(forms.ModelForm):
     name = forms.ChoiceField(choices=[])
-    class Meta :
+    class Meta:
         model = datasetModel
-        fields={"name"}
+        fields = {"name"}
+        widgets = {
+            'name': forms.Select(choices=[],attrs={'required': True}),
+          
+        }
+
     def __init__(self, *args, **kwargs):
-        super().__init__( *args, **kwargs)
-        name =datasetModel.objects.values_list('name', flat=True)
-        choices = [(m, m) for m in name]
+        super().__init__(*args, **kwargs)
+        name_choices = datasetModel.objects.values_list('name', flat=True)
+        choices = [(m, m) for m in name_choices]
         self.fields['name'].choices = choices
+
 
 
