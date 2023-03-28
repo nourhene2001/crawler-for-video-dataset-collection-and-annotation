@@ -14,12 +14,16 @@ class dataModel(models.Model):
     videoformat = models.CharField(max_length=20, choices=OPTIONS1,default="mp4")
     resolution = models.CharField(max_length=20, choices=OPTIONS2,default="720p")
     datasets = models.ManyToManyField('datasetModel')
+    def __iter__(self):
+        return iter(self.data)
     #dataset_name=models.CharField(max_length=255)
 class datasetModel(models.Model):
     id=models.AutoField(primary_key=True)
-    name= models.CharField(max_length=255,choices=[])
+    name= models.CharField(max_length=255,  blank=True)
     creation_date=models.DateTimeField()
     num_video=models.IntegerField()
+    min_v=models.CharField(max_length=255, blank=True)
+    videos = models.ManyToManyField('dataModel')
     def __iter__(self):
         return iter(self.data)
 

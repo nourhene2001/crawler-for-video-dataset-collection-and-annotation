@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+
 class QForm(forms.Form):
     query = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'placeholder': 'what are you looking for ?'}))
     #content_type = forms.BooleanField(label='content type', required=False)
@@ -44,30 +44,42 @@ class RegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
-   #new dataset
+
+
+
 class datasetForm1(forms.ModelForm):
-    class Meta:
-        model=datasetModel
-        fields={"name"}
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name'}),
-        }
-    #when he wants to store in an existing dataset
-class datasetForm2(forms.ModelForm):
-    name = forms.ChoiceField(choices=[])
+    form1_name = forms.CharField(label='form1_name', max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name','required': False}))
+
     class Meta:
         model = datasetModel
-        fields = {"name"}
+        fields = ("form1_name", "min_v")
         widgets = {
-            'name': forms.Select(choices=[],attrs={'required': True}),
-          
+            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False})
         }
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.name = self.cleaned_data['form1_name']
+        if commit:
+            instance.save()
+        return instance
+
+class datasetForm2(forms.ModelForm):
+    form2_name = forms.ChoiceField(label='form2_name', choices=[], required=True, widget=forms.Select(attrs={'required': False}))
+
+    class Meta:
+        model = datasetModel
+        fields = ["form2_name"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         name_choices = datasetModel.objects.values_list('name', flat=True)
         choices = [(m, m) for m in name_choices]
-        self.fields['name'].choices = choices
+        self.fields['form2_name'].choices = choices
 
-
-
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.name = self.cleaned_data['form2_name']
+        if commit:
+            instance.save()
+        return instance

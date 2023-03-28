@@ -19,9 +19,9 @@ from crawler.models import dataModel, datasetModel
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
-from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from datetime import datetime
+from django.contrib import messages
 
 #fun to run the spider
 def run_spider(query,max_items,duration):
@@ -45,7 +45,7 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
-            dataModel.objects.all().delete()
+            
             for item in data:
                 new_data = dataModel.objects.create(
                     
@@ -57,7 +57,7 @@ def search(request):
                 )
                 new_data.save()
                
-                data=dataModel.objects.all()
+            data=dataModel.objects.all()
             form1=dataForm()
             form2=datasetForm1()
             form3=datasetForm2()
@@ -85,34 +85,41 @@ def check(request):
             dataModel.objects.exclude(id__in=selected_elements).delete()
             selected_data.update(videoformat=videoformat, resolution=resolution)
             if 'm1' in request.POST:
-                print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                 form1 = datasetForm1(request.POST)
-                if form1.is_valid():
-                    obj=datasetModel()
-                    obj.num_video = 0
-                    name=form1.cleaned_data.get('name')
-                    print(name)
-                    obj.name=name
-                    obj.creation_date=datetime.now()
-                    obj.num_video=selected_data.count()
-                    obj.save()
-                    for data in selected_data:
-                        data.datasets.add(obj)
-                    #zydha ll vid fl model 7asb id 
-                    return redirect('check')
+                if form1.is_valid() :
+                    min_v=form1.cleaned_data.get('min_v')
+                    name=form1.cleaned_data.get('form1_name')
+                    if selected_data.count() > int(min_v):
+                        new_obj = datasetModel.objects.create(
+                            name=name,
+                            creation_date=datetime.now(),
+                            num_video=selected_data.count() ,
+                            min_v=min_v
+                        )
+                        new_obj.save()
+                        for i in selected_elements:
+                            new_obj.videos.add(i)
+                        for data in selected_data:
+                            data.datasets.add(new_obj)
+                        return redirect('check')
+                    else:
+                            #alert the user
+                        messages.error(request, 'Error message.')
+                        return redirect('check')
             elif 'm2' in request.POST:
-                print('????????????????????????????????????')
                 form2 = datasetForm2(request.POST)
                 if form2.is_valid():
-                    name=form2.cleaned_data['name']
-                    obj=datasetModel()
-                    obj.num_video=obj.num_video+selected_data.count()
-                    obj.save()
+                    name=form2.cleaned_data.get('form2_name')
+                    print(name)
+                    model=datasetModel.objects.get(name=name)
+                    model.num_video += selected_data.count()
+                    model.save()
                     for data in selected_data:
-                        data.datasets.add(obj)
-                    
+                        data.datasets.add(model)
+                    for data in model.videos.all():
+                        data.videos.add(selected_data)
                     return redirect('check')
-            
+             
     else:
         data = dataModel.objects.all()
     return render(request, 'result.html')

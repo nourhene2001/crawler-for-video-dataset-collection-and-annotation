@@ -17,7 +17,7 @@
 <script>
 $(document).ready(function() {
  
- 
+  
 
 
 
@@ -33,6 +33,7 @@ $(document).ready(function() {
         else if($(this).attr('id') == 'existing'){
             $('.new').hide();
             $('.existing').show();
+            
             $('.option').hide(); // hide the button that was clicked
         }
     });
@@ -50,7 +51,14 @@ $(document).ready(function() {
   <form id="form1" method='POST'  action="{% url 'check' %}">
     {% csrf_token %}
     <h1>results table </h1>
-    
+    {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+    {% endif %}
+
       
     <table class="table table-striped">
         <tr>
@@ -84,7 +92,7 @@ $(document).ready(function() {
     </table>
     
     
-    <button type="button"  data-toggle="modal" data-target="#myModal">Done</button>
+    <button type="button" id="done" data-toggle="modal" data-target="#myModal">Done</button>
     
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -107,7 +115,7 @@ $(document).ready(function() {
                 <div class="col-md-8">
                   <div class="option">
                   <label for="dataset_option">Choose a dataset option:</label> 
-                  <button class="cta" id="new">
+                  <button type="button" class="cta" id="new" >
                     <span>new dataset</span>
                     <svg viewBox="0 0 13 10" height="10px" width="15px">
                       <path d="M1,5 L11,5"></path>
@@ -115,7 +123,7 @@ $(document).ready(function() {
                     </svg>
                   </button>
                   
-                  <button class="cta" id="existing">
+                  <button type="button" class="cta" id="existing">
                     <span>existing dataset</span>
                     <svg viewBox="0 0 13 10" height="10px" width="15px">
                       <path d="M1,5 L11,5"></path>
@@ -127,7 +135,7 @@ $(document).ready(function() {
                 <div class="new" >
                   
                     {% csrf_token %}
-                {{ form2.as_p }}
+                    {{ form2.as_p }}
                 <button name="m1" id="m1" type="submit">Submit</button>
                   
           

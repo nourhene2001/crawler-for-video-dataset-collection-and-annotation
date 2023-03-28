@@ -51,7 +51,7 @@ ul {
   button[type="submit"]:hover {
     background-color: #867070;
   }
-  button[type="button"]{
+  button{
     background-color: #D5B4B4;
     color: white;
     padding: 10px 20px;
@@ -65,7 +65,7 @@ ul {
     margin:20px;
     width: 200px;
   }
-  button[type="button"]:hover {
+  button:hover {
     background-color: #867070;
   }
 .table{
