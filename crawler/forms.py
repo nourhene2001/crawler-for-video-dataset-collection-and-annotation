@@ -65,7 +65,7 @@ class datasetForm1(forms.ModelForm):
         return instance
 
 class datasetForm2(forms.ModelForm):
-    form2_name = forms.ChoiceField(label='form2_name', choices=[], required=True, widget=forms.Select(attrs={'required': False}))
+    form2_name = forms.ChoiceField(label='form2_name', choices=[], required=False, widget=forms.Select(attrs={'required': False}))
 
     class Meta:
         model = datasetModel
@@ -74,7 +74,7 @@ class datasetForm2(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         name_choices = datasetModel.objects.values_list('name', flat=True)
-        choices = [(m, m) for m in name_choices]
+        choices = [('', '---')] +[(m, m) for m in name_choices]
         self.fields['form2_name'].choices = choices
 
     def save(self, commit=True):

@@ -15,7 +15,7 @@ from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
 from .forms import   QForm, dataForm, datasetForm1, datasetForm2
 from django.contrib.auth.decorators import login_required
-from crawler.models import dataModel, datasetModel
+from crawler.models import  dataModel, datasetModel
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
@@ -45,7 +45,8 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
-            
+            c=0
+             # get the time when the form was submitted
             for item in data:
                 new_data = dataModel.objects.create(
                     
@@ -55,13 +56,14 @@ def search(request):
                     description=item['description'],
                     url=item['url']
                 )
+                c=c+1
                 new_data.save()
-               
-            data=dataModel.objects.all()
+    
+
             form1=dataForm()
             form2=datasetForm1()
             form3=datasetForm2()
-            return render(request, 'result.html', {'data': data,'form1':form1,'form2':form2,'form3':form3})
+            return render(request, 'result.html', {'data': dataModel.objects.all().order_by('-id')[:c],'form1':form1,'form2':form2,'form3':form3})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
             with open(csv_path,encoding='utf-8') as csv_file:
                 response = HttpResponse(csv_file.read(), content_type='text/csv')
@@ -82,7 +84,7 @@ def check(request):
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
             selected_data=dataModel.objects.filter(id__in=selected_elements)
-            dataModel.objects.exclude(id__in=selected_elements).delete()
+            print(selected_data)
             selected_data.update(videoformat=videoformat, resolution=resolution)
             if 'm1' in request.POST:
                 form1 = datasetForm1(request.POST)
@@ -97,11 +99,9 @@ def check(request):
                             min_v=min_v
                         )
                         new_obj.save()
-                        for i in selected_elements:
-                            new_obj.videos.add(i)
-                        for data in selected_data:
-                            data.datasets.add(new_obj)
-                        return redirect('check')
+                        
+
+                        return render(request, 'result.html')
                     else:
                             #alert the user
                         messages.error(request, 'Error message.')
@@ -110,15 +110,13 @@ def check(request):
                 form2 = datasetForm2(request.POST)
                 if form2.is_valid():
                     name=form2.cleaned_data.get('form2_name')
-                    print(name)
                     model=datasetModel.objects.get(name=name)
                     model.num_video += selected_data.count()
+                    
+
                     model.save()
-                    for data in selected_data:
-                        data.datasets.add(model)
-                    for data in model.videos.all():
-                        data.videos.add(selected_data)
-                    return redirect('check')
+                    
+                    return render(request, 'result.html')
              
     else:
         data = dataModel.objects.all()
