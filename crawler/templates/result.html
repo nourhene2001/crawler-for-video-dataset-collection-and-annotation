@@ -73,7 +73,7 @@ $(document).ready(function() {
 
 
           </tr>
-          
+          <input type="hidden" name="all_elements" value="{% for item in data %}{{ item.id }},{% endfor %}">
           {% for item in data %}
               <tr>
                 

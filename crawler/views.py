@@ -45,7 +45,8 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
-            
+            c=0
+             # get the time when the form was submitted
             for item in data:
                 new_data = dataModel.objects.create(
                     
@@ -55,13 +56,14 @@ def search(request):
                     description=item['description'],
                     url=item['url']
                 )
+                c=c+1
                 new_data.save()
-               
-            data=dataModel.objects.all()
+    
+
             form1=dataForm()
             form2=datasetForm1()
             form3=datasetForm2()
-            return render(request, 'result.html', {'data': data,'form1':form1,'form2':form2,'form3':form3})
+            return render(request, 'result.html', {'data': dataModel.objects.all().order_by('-id')[:c],'form1':form1,'form2':form2,'form3':form3})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
             with open(csv_path,encoding='utf-8') as csv_file:
                 response = HttpResponse(csv_file.read(), content_type='text/csv')
@@ -78,11 +80,17 @@ def check(request):
     if request.method == 'POST':
         form = dataForm(request.POST)
         selected_elements = request.POST.getlist('selected_elements')
+        all_elements = request.POST.get('all_elements').split(',')
+        print(all_elements)
+        non_selected_elements = set(all_elements) - set(selected_elements)
+        print(non_selected_elements)
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
             selected_data=dataModel.objects.filter(id__in=selected_elements)
-            dataModel.objects.exclude(id__in=selected_elements).delete()
+            if len(non_selected_elements) > 1:
+                non_selected_data=dataModel.objects.filter(id__in=non_selected_elements)
+                non_selected_data.delete()
             selected_data.update(videoformat=videoformat, resolution=resolution)
             if 'm1' in request.POST:
                 form1 = datasetForm1(request.POST)
@@ -97,11 +105,14 @@ def check(request):
                             min_v=min_v
                         )
                         new_obj.save()
-                        for i in selected_elements:
-                            new_obj.videos.add(i)
-                        for data in selected_data:
-                            data.datasets.add(new_obj)
-                        return redirect('check')
+
+                        
+                            
+                         # add selected videos to the dataset
+
+                        
+                        
+                        return render(request, 'result.html')
                     else:
                             #alert the user
                         messages.error(request, 'Error message.')
@@ -113,12 +124,10 @@ def check(request):
                     print(name)
                     model=datasetModel.objects.get(name=name)
                     model.num_video += selected_data.count()
+                    
                     model.save()
-                    for data in selected_data:
-                        data.datasets.add(model)
-                    for data in model.videos.all():
-                        data.videos.add(selected_data)
-                    return redirect('check')
+                    
+                    return render(request, 'result.html')
              
     else:
         data = dataModel.objects.all()
