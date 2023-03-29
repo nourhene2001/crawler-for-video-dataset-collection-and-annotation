@@ -9,6 +9,5 @@ class Migration(migrations.Migration):
         ('crawler', '0039_alter_video_dataset_dataset_and_more'),
     ]
 
-    operations = [   migrations.RemoveField(        model_name='datasetModel',        name='videos',    ),]
-
-    
+    operations = [
+    ]

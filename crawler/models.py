@@ -33,12 +33,12 @@ class datasetModel(models.Model):
     def __iter__(self):
         return iter(self.data)
 
-
 class video_dataset(models.Model):
     id=models.AutoField(primary_key=True)
-    dataset = models.ForeignKey(datasetModel, related_name="video_dataset",on_delete=models.CASCADE)
-    videos = models.ForeignKey(dataModel,related_name="video_dataset", on_delete=models.CASCADE)
+    dataset = models.ForeignKey(datasetModel, on_delete=models.CASCADE)
+    videos = models.ForeignKey(dataModel, on_delete=models.CASCADE)
     added_date = models.DateTimeField(auto_now_add=True) 
+
 
 
 

@@ -16,9 +16,14 @@ class Migration(migrations.Migration):
             name='dataset',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='crawler.datasetmodel'),
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='datasetmodel',
+            name='videos',
+        ),
+        migrations.AddField(
             model_name='datasetmodel',
             name='videos',
             field=models.ManyToManyField(blank=True, to='crawler.datamodel'),
         ),
+        
     ]

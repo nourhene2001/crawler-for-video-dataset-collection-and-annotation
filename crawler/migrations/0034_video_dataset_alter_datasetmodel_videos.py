@@ -20,9 +20,14 @@ class Migration(migrations.Migration):
                 ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crawler.datamodel')),
             ],
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='datasetmodel',
+            name='videos',
+        ),
+        migrations.AddField(
             model_name='datasetmodel',
             name='videos',
             field=models.ManyToManyField(through='crawler.video_dataset', to='crawler.datamodel'),
         ),
+        
     ]

@@ -15,9 +15,14 @@ class Migration(migrations.Migration):
             old_name='video',
             new_name='videos',
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='datasetmodel',
+            name='videos',
+        ),
+        migrations.AddField(
             model_name='datasetmodel',
             name='videos',
             field=models.ManyToManyField(blank=True, through='crawler.video_dataset', to='crawler.datamodel'),
         ),
+        
     ]
