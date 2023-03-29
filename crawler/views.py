@@ -15,7 +15,7 @@ from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
 from .forms import   QForm, dataForm, datasetForm1, datasetForm2
 from django.contrib.auth.decorators import login_required
-from crawler.models import dataModel, datasetModel
+from crawler.models import  dataModel, datasetModel
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
@@ -80,17 +80,11 @@ def check(request):
     if request.method == 'POST':
         form = dataForm(request.POST)
         selected_elements = request.POST.getlist('selected_elements')
-        all_elements = request.POST.get('all_elements').split(',')
-        print(all_elements)
-        non_selected_elements = set(all_elements) - set(selected_elements)
-        print(non_selected_elements)
         if form.is_valid():
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
             selected_data=dataModel.objects.filter(id__in=selected_elements)
-            if len(non_selected_elements) > 1:
-                non_selected_data=dataModel.objects.filter(id__in=non_selected_elements)
-                non_selected_data.delete()
+            print(selected_data)
             selected_data.update(videoformat=videoformat, resolution=resolution)
             if 'm1' in request.POST:
                 form1 = datasetForm1(request.POST)
@@ -105,13 +99,8 @@ def check(request):
                             min_v=min_v
                         )
                         new_obj.save()
+                        
 
-                        
-                            
-                         # add selected videos to the dataset
-
-                        
-                        
                         return render(request, 'result.html')
                     else:
                             #alert the user
@@ -121,10 +110,10 @@ def check(request):
                 form2 = datasetForm2(request.POST)
                 if form2.is_valid():
                     name=form2.cleaned_data.get('form2_name')
-                    print(name)
                     model=datasetModel.objects.get(name=name)
                     model.num_video += selected_data.count()
                     
+
                     model.save()
                     
                     return render(request, 'result.html')
