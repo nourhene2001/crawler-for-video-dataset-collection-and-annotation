@@ -15,7 +15,7 @@ from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
 from .forms import   QForm, dataForm, datasetForm1, datasetForm2
 from django.contrib.auth.decorators import login_required
-from crawler.models import  dataModel, datasetModel
+from crawler.models import  dataModel, datasetModel, video_dataset
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
@@ -99,8 +99,9 @@ def check(request):
                             min_v=min_v
                         )
                         new_obj.save()
-                        
-
+                        for v in selected_data:
+                            v_d = video_dataset.objects.create(dataset=new_obj, videos=v)
+                        v_d.save()
                         return render(request, 'result.html')
                     else:
                             #alert the user
@@ -115,7 +116,9 @@ def check(request):
                     
 
                     model.save()
-                    
+                    for v in selected_data:
+                            v_d = video_dataset.objects.create(dataset=model, videos=v)
+                    v_d.save()
                     return render(request, 'result.html')
              
     else:
