@@ -92,7 +92,7 @@ $(document).ready(function() {
     </table>
     
     
-    <button type="button" id="done" data-toggle="modal" data-target="#myModal">Done</button>
+    <button class="b" type="button" id="done" data-toggle="modal" data-target="#myModal">Done</button>
     
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -105,14 +105,14 @@ $(document).ready(function() {
             </div>
             <div class="modal-body">
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                   
                 {% csrf_token %}
                 {{ form1.as_p }}
                 
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-md-9">
                   <div class="option">
                   <label for="dataset_option">Choose a dataset option:</label> 
                   <button type="button" class="cta" id="new" >
