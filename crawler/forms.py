@@ -52,10 +52,13 @@ class datasetForm1(forms.ModelForm):
 
     class Meta:
         model = datasetModel
-        fields = ("form1_name", "min_v")
+        fields = ("form1_name", "min_v","max_v","description")
         widgets = {
-            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False})
+            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False}),
+            'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': False}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': False})
         }
+
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -66,10 +69,14 @@ class datasetForm1(forms.ModelForm):
 
 class datasetForm2(forms.ModelForm):
     form2_name = forms.ChoiceField(label='form2_name', choices=[], required=False, widget=forms.Select(attrs={'required': False}))
-
+    widgets = {
+            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False}),
+            'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': False}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': False})
+        }
     class Meta:
         model = datasetModel
-        fields = ["form2_name"]
+        fields = ("form2_name", "min_v","max_v","description")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,6 +87,27 @@ class datasetForm2(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.name = self.cleaned_data['form2_name']
+        if commit:
+            instance.save()
+        return instance
+class datasetForm3(forms.ModelForm):
+    form3_name = forms.ChoiceField(label='form3_name', choices=[], required=True, widget=forms.Select(attrs={'required': False}))
+    widgets = {
+            
+        }
+    class Meta:
+        model = datasetModel
+        fields = ["form3_name"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        name_choices = datasetModel.objects.values_list('name', flat=True)
+        choices = [('', '---')] +[(m, m) for m in name_choices]
+        self.fields['form3_name'].choices = choices
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.name = self.cleaned_data['form3_name']
         if commit:
             instance.save()
         return instance

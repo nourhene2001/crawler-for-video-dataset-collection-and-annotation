@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+{% block title %}new dataset{% endblock %}
+
+{% block content %}
+<h1>update dataset</h1>
+    <form method="post" action="{% url 'update_d' %}">
+        {% csrf_token %}
+        {{ form2.as_p }}
+        <button name="m1" id="m1" type="submit">Submit</button>
+    </form>
+{% endblock %}

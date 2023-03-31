@@ -13,7 +13,7 @@ from scrapy import Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrape.spiders.youtube import YoutubeSpider
-from .forms import   QForm, dataForm, datasetForm1, datasetForm2
+from .forms import   QForm, dataForm, datasetForm1, datasetForm2, datasetForm3
 from django.contrib.auth.decorators import login_required
 from crawler.models import  dataModel, datasetModel, video_dataset
 from django.shortcuts import render, redirect
@@ -29,7 +29,11 @@ def run_spider(query,max_items,duration):
     spider_cls = YoutubeSpider
     process.crawl(spider_cls,query=query,max_items=max_items,duration=duration)
     process.start()
+
 #the function that takes the query and start the spider
+@login_required
+def main(request):
+    return render(request,'main.html')
 @login_required
 def search(request):
     form=QForm()
@@ -61,9 +65,9 @@ def search(request):
     
 
             form1=dataForm()
-            form2=datasetForm1()
-            form3=datasetForm2()
-            return render(request, 'result.html', {'data': dataModel.objects.all().order_by('-id')[:c],'form1':form1,'form2':form2,'form3':form3})
+            
+            form3=datasetForm3()
+            return render(request, 'result.html', {'data': dataModel.objects.all().order_by('-id')[:c],'form1':form1,'form3':form3})
             """csv_path = os.path.join(os.getcwd(), '', 'data.csv')
             with open(csv_path,encoding='utf-8') as csv_file:
                 response = HttpResponse(csv_file.read(), content_type='text/csv')
@@ -72,6 +76,62 @@ def search(request):
         else:
             form = QForm()
     return render(request, 'forms.html', {'form': form})
+@login_required
+def create_d(request):
+    form_create=datasetForm1()
+    if request.method == 'POST':
+        form_create=datasetForm1(request.POST)
+        if form_create.is_valid():
+            name=form_create.cleaned_data['form1_name']
+            min_v=form_create.cleaned_data['min_v']
+            max_v=form_create.cleaned_data['max_v']
+            description=form_create.cleaned_data['description']
+            new_obj = datasetModel.objects.create(
+                            name=name,
+                            creation_date=datetime.now(),
+                            min_v=min_v,
+                            max_v=max_v,
+                            description=description
+                        )
+            new_obj.save()
+    return render(request, 'new_dataset.html',{'form_create': form_create})
+@login_required
+def update_d(request):
+    form2=datasetForm2()
+    if request.method == 'POST':
+        form2 = datasetForm2(request.POST)
+        if form2.is_valid():
+            name=form2.cleaned_data['form2_name']
+            min_v=form2.cleaned_data['min_v']
+            max_v=form2.cleaned_data['max_v']
+            description=form2.cleaned_data['description']
+            model=datasetModel.objects.get(name=name)
+            model.update(min_v=min_v,max_v=max_v,description=description,name=name)
+            model.save()
+    return render(request, 'update_dataset.html',{'form2': form2})
+@login_required
+def choice_d(request):
+    form = dataForm()
+    form2=datasetForm3
+    if request.method=='POST':
+        form2=datasetForm3(request.POST)
+        selected_elements = request.POST.getlist('selected_elements')
+        if form.is_valid() and form2.is_valid:
+            videoformat = form.cleaned_data['videoformat']
+            resolution = form.cleaned_data['resolution']
+            selected_data=dataModel.objects.filter(id__in=selected_elements)
+            print(selected_data)
+            selected_data.update(videoformat=videoformat, resolution=resolution)
+            if form2.is_valid():
+                name=form2.cleaned_data.get('form3_name')
+                model=datasetModel.objects.get(name=name)
+                model.num_video += selected_data.count()
+                model.save()
+                for v in selected_data:
+                    v_d = video_dataset.objects.create(dataset=model, videos=v)
+                v_d.save()
+                return render(request, 'main.html')
+    return render(request,'result.html')
 @login_required
 def check(request):
     form = dataForm()
@@ -102,7 +162,7 @@ def check(request):
                         for v in selected_data:
                             v_d = video_dataset.objects.create(dataset=new_obj, videos=v)
                         v_d.save()
-                        return render(request, 'result.html')
+                        return render(request, 'new_dataset.html')
                     else:
                             #alert the user
                         messages.error(request, 'Error message.')
@@ -119,7 +179,7 @@ def check(request):
                     for v in selected_data:
                             v_d = video_dataset.objects.create(dataset=model, videos=v)
                     v_d.save()
-                    return render(request, 'result.html')
+                    return render(request, 'update_dataset.html')
              
     else:
         data = dataModel.objects.all()

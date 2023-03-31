@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crawler',
     'scrape',
     'rest_framework',
+    "bootstrap5",
     
 
 

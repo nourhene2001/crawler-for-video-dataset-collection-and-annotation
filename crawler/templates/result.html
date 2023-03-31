@@ -1,53 +1,12 @@
-{% load static %}
 
-
-<!DOCTYPE html>
-<head>
-    <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <!-- Include Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-<!-- Include Bootstrap JS and jQuery -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNSG+2h" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script>
-$(document).ready(function() {
- 
-  
-
-
-
-    $('.new, .existing').hide(); // hide both divs initially
-    $('button').click(function(){
-        if($(this).attr('id') == 'new'){
-            $('.existing').hide();
-            $('.new').show();
-            
-            $('.option').hide();
-             // hide the button that was clicked
-        }
-        else if($(this).attr('id') == 'existing'){
-            $('.new').hide();
-            $('.existing').show();
-            
-            $('.option').hide(); // hide the button that was clicked
-        }
-    });
-
-  });
-  
-  
-
-    </script>
     
 
 
-</head>
-<body>
+    {% extends 'main.html' %}
+
+    {% block title %}new dataset{% endblock %}
+    
+    {% block content %}
   <form id="form1" method='POST'  action="{% url 'check' %}">
     {% csrf_token %}
     <h1>results table </h1>
@@ -92,54 +51,27 @@ $(document).ready(function() {
     </table>
     
     
-    <button class="b" type="button" id="done" data-toggle="modal" data-target="#myModal">Done</button>
     
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="myModalLabel">configuration </h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Done</button>
+    
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">configuration</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+              <div >
+                
                   
                 {% csrf_token %}
                 {{ form1.as_p }}
                 
                 </div>
 
-                <div class="col-md-9">
-                  <div class="option">
-                  <label for="dataset_option">Choose a dataset option:</label> 
-                  <button type="button" class="cta" id="new" >
-                    <span>new dataset</span>
-                    <svg viewBox="0 0 13 10" height="10px" width="15px">
-                      <path d="M1,5 L11,5"></path>
-                      <polyline points="8 1 12 5 8 9"></polyline>
-                    </svg>
-                  </button>
-                  
-                  <button type="button" class="cta" id="existing">
-                    <span>existing dataset</span>
-                    <svg viewBox="0 0 13 10" height="10px" width="15px">
-                      <path d="M1,5 L11,5"></path>
-                      <polyline points="8 1 12 5 8 9"></polyline>
-                    </svg>
-                  </button>
-                </div>
-
-                <div class="new" >
-                  
-                    {% csrf_token %}
-                    {{ form2.as_p }}
-                <button name="m1" id="m1" type="submit">Submit</button>
-                  
-          
-                  </div>
+                
                   
                   <div class="existing">
                  
@@ -150,19 +82,24 @@ $(document).ready(function() {
                   
               </div>
                 </div>
-                
-              
+            </div>
+            </div>
+            </div>
+            </div>
             </div>
             
           </div>
+          
         </div>
       </div>
-      
+    </div>
+            </form>
+            
 
+              
    
-   
+                  
       
-   </div>
-  </form>
-   </body>
+ 
+  {% endblock %}
    

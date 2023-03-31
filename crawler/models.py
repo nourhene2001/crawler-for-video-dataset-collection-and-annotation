@@ -23,10 +23,12 @@ class dataModel(models.Model):
 
 class datasetModel(models.Model):
     id=models.AutoField(primary_key=True)
-    name= models.CharField(max_length=255,  blank=True)
+    name= models.CharField(max_length=255, unique=True, blank=True)
     creation_date=models.DateTimeField()
-    num_video=models.IntegerField()
+    num_video=models.IntegerField(default=0)
     min_v=models.CharField(max_length=255, blank=True)
+    max_v=models.CharField(max_length=255,blank=True)
+    description=models.CharField(max_length=1000,blank=True)
     videos = models.ManyToManyField(dataModel, through='video_dataset',through_fields=('dataset', 'videos'))
 
 
