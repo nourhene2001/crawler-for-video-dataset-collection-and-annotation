@@ -45,7 +45,7 @@ class RegistrationForm(UserCreationForm):
             user.save()
         return user
 
-
+#create
 
 class datasetForm1(forms.ModelForm):
     form1_name = forms.CharField(label='form1_name', max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name','required': False}))
@@ -66,7 +66,7 @@ class datasetForm1(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
+#update
 class datasetForm2(forms.ModelForm):
     form2_name = forms.ChoiceField(label='form2_name', choices=[], required=False, widget=forms.Select(attrs={'required': False}))
     widgets = {
@@ -90,6 +90,7 @@ class datasetForm2(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+#choose the one to update
 class datasetForm3(forms.ModelForm):
     form3_name = forms.ChoiceField(label='form3_name', choices=[], required=True, widget=forms.Select(attrs={'required': False}))
     widgets = {

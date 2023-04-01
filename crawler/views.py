@@ -30,10 +30,11 @@ def run_spider(query,max_items,duration):
     process.crawl(spider_cls,query=query,max_items=max_items,duration=duration)
     process.start()
 
-#the function that takes the query and start the spider
+#main page
 @login_required
 def main(request):
     return render(request,'main.html')
+#the function that takes the query and start the spider
 @login_required
 def search(request):
     form=QForm()
@@ -76,6 +77,7 @@ def search(request):
         else:
             form = QForm()
     return render(request, 'forms.html', {'form': form})
+#create the dataset
 @login_required
 def create_d(request):
     form_create=datasetForm1()
@@ -95,11 +97,23 @@ def create_d(request):
                         )
             new_obj.save()
     return render(request, 'new_dataset.html',{'form_create': form_create})
+#choose the dataset to update
 @login_required
 def update_d(request):
-    form2=datasetForm2()
+    form3=datasetForm3()
     if request.method == 'POST':
-        form2 = datasetForm2(request.POST)
+        form3 = datasetForm3(request.POST)
+        if form3.is_valid():
+            name=form3.cleaned_data['form3_name']
+            return redirect('update', name=name)
+    return render(request,'update_dataset.html', {'form3': form3})
+#update the dataset
+@login_required
+def update(request,name):
+    instance = datasetModel.objects.get(name=name)
+    form2 = datasetForm2(instance=instance)
+    if request.method == 'POST':
+        form2 = datasetForm2(request.POST, instance=instance)
         if form2.is_valid():
             name=form2.cleaned_data['form2_name']
             min_v=form2.cleaned_data['min_v']
@@ -108,7 +122,8 @@ def update_d(request):
             model=datasetModel.objects.get(name=name)
             model.update(min_v=min_v,max_v=max_v,description=description,name=name)
             model.save()
-    return render(request, 'update_dataset.html',{'form2': form2})
+    return render(request,'update_dataset.html', {'form2': form2})
+#after result page choose
 @login_required
 def choice_d(request):
     form = dataForm()
@@ -132,7 +147,7 @@ def choice_d(request):
                 v_d.save()
                 return render(request, 'main.html')
     return render(request,'result.html')
-@login_required
+"""@login_required
 def check(request):
     form = dataForm()
     form1 = datasetForm1()
@@ -183,7 +198,7 @@ def check(request):
              
     else:
         data = dataModel.objects.all()
-    return render(request, 'result.html')
+    return render(request, 'result.html')"""
 #for form of datasets:
 
 #register view
