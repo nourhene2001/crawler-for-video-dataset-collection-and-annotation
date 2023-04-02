@@ -1,11 +1,13 @@
 $(document).ready(function() {
-     
-    $('.existing').hide(); 
-    $('button').click(function() {
-        // hide the button that was clicked
-        if ($(this).attr('id') == 'existing') {
-            $('.existing').show();
-            $('.option').hide(); // hide the button that was clicked
-        }
-    });
+  
+    
+const form3 = document.querySelector('#form3');
+const form2 = document.querySelector('#form2');
+const submitButton = form3.querySelector('button[class="cta"]');
+
+submitButton.addEventListener('click', () => {
+  const name = form3.querySelector('#id_form3_name').value;
+  form2.action = `{% url "update" name="${name}" %}`;
+});
+
 });

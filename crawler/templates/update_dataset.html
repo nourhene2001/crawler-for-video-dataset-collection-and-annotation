@@ -7,11 +7,11 @@
 <h1>update dataset</h1>
 <div class="option">
     
-    <form method="post" action="{% url 'update_d' %}">
+    <form method="post" action="{% url 'update_d' %}" id="form3">
         {% csrf_token %}
         {{ form3.as_p }}
 
-    <button type="button" class="cta" id="existing" >
+    <button type="submit" class="cta" >
       <span>continue</span>
       <svg viewBox="0 0 13 10" height="10px" width="15px">
         <path d="M1,5 L11,5"></path>
@@ -22,11 +22,11 @@
     </form>
 </div>
 <div class="existing">
-    <form method="post" action="{% url 'update' %}" >
-        {% csrf_token %}
-        {{ form2.as_p }}
-        <button name="m1" id="m1" type="submit">Submit</button>
-    </form>
+  <form method="post" id="form2">
+    {% csrf_token %}
+    {{ form2.as_p }}
+
+<button type="submit"  >submit</button>
 </div>
     
 {% endblock %}
