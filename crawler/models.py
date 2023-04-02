@@ -23,7 +23,7 @@ class dataModel(models.Model):
 
 class datasetModel(models.Model):
     id=models.AutoField(primary_key=True)
-    name= models.CharField(max_length=255, unique=True, blank=True)
+    name= models.CharField(max_length=255, unique=True)
     creation_date=models.DateTimeField()
     num_video=models.IntegerField(default=0)
     min_v=models.CharField(max_length=255, blank=True)

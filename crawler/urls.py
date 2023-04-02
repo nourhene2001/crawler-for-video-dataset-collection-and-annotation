@@ -11,6 +11,6 @@ urlpatterns=[
     path('create_d/',views.create_d,name='create_d'),
     path('update_d/',views.update_d,name='update_d'),
     path('check/',views.choice_d,name="check"),
-    path('update/', views.update, name='update')
+    path('update_d/update/<str:name>/', views.update, name='update')
 
 ]

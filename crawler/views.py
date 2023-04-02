@@ -110,18 +110,20 @@ def update_d(request):
 #update the dataset
 @login_required
 def update(request,name):
-    instance = datasetModel.objects.get(name=name)
+    i = datasetModel.objects.get(name=name)
+    id=i.id
+    instance=datasetModel.objects.get(id=id)
     form2 = datasetForm2(instance=instance)
     if request.method == 'POST':
+        print('§§§§§§§§§§§§§§§§§§§§§§§§§§§§')
         form2 = datasetForm2(request.POST, instance=instance)
         if form2.is_valid():
             name=form2.cleaned_data['form2_name']
             min_v=form2.cleaned_data['min_v']
             max_v=form2.cleaned_data['max_v']
             description=form2.cleaned_data['description']
-            model=datasetModel.objects.get(name=name)
-            model.update(min_v=min_v,max_v=max_v,description=description,name=name)
-            model.save()
+            instance.update(name=name,min_v=min_v,max_v=max_v,description=description)
+            instance.save()
     return render(request,'update_dataset.html', {'form2': form2})
 #after result page choose
 @login_required
