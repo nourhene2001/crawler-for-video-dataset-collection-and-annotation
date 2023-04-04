@@ -3,7 +3,7 @@ from multiprocessing import Process
 import django
 import json
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
 django.setup()
 import os
@@ -22,6 +22,7 @@ from .forms import RegistrationForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from datetime import datetime
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 #fun to run the spider
 def run_spider(query,max_items,duration):
@@ -29,7 +30,27 @@ def run_spider(query,max_items,duration):
     spider_cls = YoutubeSpider
     process.crawl(spider_cls,query=query,max_items=max_items,duration=duration)
     process.start()
+@login_required
+@csrf_exempt
+def update_dataset(request):
+    if request.method == 'POST' and request.is_ajax():
+        print('§§§§§§§§§§§§§§§§§§§§§§§§§§§§§')
+        data_id = request.POST.get('data_id')
+        field_name = request.POST.get('field_name')
+        field_value = request.POST.get('field_value')
 
+        dataset = datasetModel.objects.get(id=data_id)
+        setattr(dataset, field_name, field_value)
+        dataset.save()
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False})
+@login_required
+def display_dataset(request):
+    data=datasetModel.objects.all()
+    print(data)
+    return render(request, 'update_dataset.html', {'data': data})
 #main page
 @login_required
 def main(request):
@@ -98,7 +119,7 @@ def create_d(request):
             new_obj.save()
     return render(request, 'new_dataset.html',{'form_create': form_create})
 #choose the dataset to update
-@login_required
+"""@login_required
 def update_d(request):
     form3=datasetForm3()
     if request.method == 'POST':
@@ -124,7 +145,7 @@ def update(request,name):
             description=form2.cleaned_data['description']
             instance.update(name=name,min_v=min_v,max_v=max_v,description=description)
             instance.save()
-    return render(request,'update_dataset.html', {'form2': form2})
+    return render(request,'update_dataset.html', {'form2': form2})"""
 #after result page choose
 @login_required
 def choice_d(request):

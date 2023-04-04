@@ -3,30 +3,62 @@
 {% block title %}new dataset{% endblock %}
 
 {% block content %}
-
+<script src="{% static 'js/script.js' %}"></script>
 <h1>update dataset</h1>
-<div class="option">
-    
-    <form method="post" action="{% url 'update_d' %}" id="form3">
-        {% csrf_token %}
-        {{ form3.as_p }}
 
-    <button type="submit" class="cta" >
-      <span>continue</span>
-      <svg viewBox="0 0 13 10" height="10px" width="15px">
-        <path d="M1,5 L11,5"></path>
-        <polyline points="8 1 12 5 8 9"></polyline>
-      </svg>
-    </button>
-    
-    </form>
-</div>
-<div class="existing">
-  <form method="post" id="form2">
-    {% csrf_token %}
-    {{ form2.as_p }}
+<table class="table table-striped">
+  <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>description</th>
+      <th>min video</th>
+      <th>max video</th>
+      <th>video number</th>
+      <th>creation data</th>
+      
+     
 
-<button type="submit"  >submit</button>
-</div>
+
+    </tr>
+    
+    {% for item in data %}
+        <tr >
+          
+              
+            <td>{{ item.id }}</td>
+            <td onclick="editField(event,'{{ item.id }}', 'name', '{{ item.name }}')">{{ item.name }}</td>
+            <td onclick="editField(event,'{{ item.id }}', 'description', '{{ item.description }}')">{{item.description}}</td>
+            <td onclick="editField(event,'{{ item.id }}', 'min_vid', '{{ item.min_v}}')">{{ item.min_v }}</td>
+            <td onclick="editField(event,'{{ item.id }}', 'max_v', '{{ item.max_v }}')">{{ item.max_v }}</td>
+            <td>{{item.num_video}}</td>
+            <td>{{item.creation_date}}</td>
+            
+            
+        </tr>
+    {% endfor %}
+
+</table>
+
+  
+    
+{% csrf_token %} <!-- add this line to define the CSRF token variable -->
+
+  <button type="button" >
+    Done
+  </button>
+   
+    
+ 
+
+          
+
+            
+    
+
+    
+    
+    
+
+
     
 {% endblock %}
