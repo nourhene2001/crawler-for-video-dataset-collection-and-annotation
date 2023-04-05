@@ -49,7 +49,7 @@ ul {
     width: 100%;
   }
   button[type="submit"]:hover {
-    background-color: #867070;
+    background-color: #727e8b;
   }
   .b{
     background-color: #D5B4B4;
@@ -64,13 +64,14 @@ ul {
     font-family: Helvetica,"sans-serif";
     margin:20px;
     width: 200px;
+    top:50px;
   }
   .b:hover {
-    background-color: #867070;
+    background-color: #727e8b;
   }
 .table{
 
-font-size: x-small;
+font-size:medium;
   }
   .col-md-8{
     text-align: center;
@@ -136,16 +137,34 @@ font-size: x-small;
    }
   .c{
     height: 100vh;
-    background-color: #867070;
+    
     width: 280px;
     font-size: larger;
     padding-top: 50px;
     position: fixed;
+    padding-top :100px;
+    cursor:pointer;
+    
+  
+    font-weight: 500;
+    transition: width 0.3s ease-in-out;
   }
 li{
   margin: 0px;
-  margin-left: 25px;
+  margin-left: 15px;
   padding : 0px;
+}
+
+.nav-link:hover{
+background-color: #727e8b;
+border-radius: 10px;
+margin-right:5px;
+}
+a:hover{
+  background-color: #727e8b;
+}
+a:focus{
+  background-color: #727e8b;
 }
 .btn:focus{
   box-shadow: none !important;
@@ -159,22 +178,28 @@ ul{
 }
 .row{
   display: flex;
-  flex-direction: row;
+  
 }
+
+
 .item2 {
   position: absolute;
   top: 0;
   left: 0;
 }
 
-.item1.collapsed ~ .item2 {
-  position: static;
-  margin-left: auto;
-  
-}
+
 svg{
-  width: 50px;
-  height: 50px;
+  width: 35px;
+  height: 35px;
+  margin-top: 20px;
+  
+  cursor:pointer;
+}
+svg:hover{
+  background-color: #727e8b;
+  border-radius:10px;
+  
 }
 .p-3 {
   padding: 50px !important;
@@ -186,7 +211,56 @@ svg{
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 4px;
+  padding: 0px;
   border-radius: 0px;
+  margin: 0;
+}
+.input-field:focus{
+  border: none;
+}
+.after{
+  box-sizing: border-box;
+}
+table {
+  border-collapse: collapse;
+  border-color: #b09a9a;
+}
+td{
+  padding:0px;
+}
+.cur{
+  cursor: pointer;
+}
+tr{
+  resize: horizontal; /* allow vertical resizing */
+  overflow: auto; /* show scrollbar if content overflows */
+}
+th:hover{
+  background-color: #867070;
 }
 
+
+#item1 {
+  width: 280px; /* initial width */
+  transition: width 0.5s ease-in-out; /* transition on width property */
+}
+#item1.collapsed {
+  width: 0px; /* collapsed width */
+}
+.item2 {
+  position: absolute;
+  width: 50px; /* initial width */
+  transition: width 0.5s ease-in-out; /* transition on width property */
+}
+.item2.collapsed {
+  width: 0; /* collapsed width */
+}
+#text.collapsed {
+  display: none;
+}
+#content {
+  transition: margin-left 0.5s ease-in-out; /* transition on margin-left property */
+}
+#content.collapsed {
+  margin-left: 50px; /* move content to the left when collapsed */
+}

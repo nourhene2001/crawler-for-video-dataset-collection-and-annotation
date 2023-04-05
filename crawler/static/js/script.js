@@ -37,7 +37,7 @@ function editField(event, itemId, fieldName, fieldValue) {
     inputField.type = 'text';
     inputField.value = fieldValue;
     inputField.classList.add('input-field'); // Add a class to the input field
-    
+   
     // Replace the text in the cell with the input field
     cell.textContent = '';
     cell.appendChild(inputField);

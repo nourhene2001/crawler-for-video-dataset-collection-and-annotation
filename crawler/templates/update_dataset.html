@@ -6,16 +6,17 @@
 <script src="{% static 'js/script.js' %}"></script>
 
 <h1>update dataset</h1>
-
+<p>click on the field you want to update</p>
 <table class="table table-bordered">
   <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>description</th>
-      <th>min video</th>
-      <th>max video</th>
-      <th>video number</th>
-      <th>creation data</th>
+      <th class='cur'>ID</th>
+      <th class='cur'>Name</th>
+      <th class='cur'>description</th>
+      <th class='cur'>min video</th>
+      <th class='cur'>max video</th>
+      <th class='cur'>video number</th>
+      <th class='cur'>creation data</th>
+      <th class='cur'>action</th>
     </tr>
     
     {% for item in data %}
@@ -23,12 +24,15 @@
           
               
             <td>{{ item.id }}</td>
-            <td onclick="editField(event,'{{ item.id }}', 'name', '{{ item.name }}')">{{ item.name }}</td>
-            <td onclick="editField(event,'{{ item.id }}', 'description', '{{ item.description }}')">{{item.description}}</td>
-            <td onclick="editField(event,'{{ item.id }}', 'min_vid', '{{ item.min_v}}')">{{ item.min_v }}</td>
-            <td onclick="editField(event,'{{ item.id }}', 'max_v', '{{ item.max_v }}')">{{ item.max_v }}</td>
+            <td class='cur' onclick="editField(event,'{{ item.id }}', 'name', '{{ item.name }}')">{{ item.name }}</td>
+            <td class='cur'  onclick="editField(event,'{{ item.id }}', 'description', '{{ item.description }}')">{{item.description}}</td>
+            <td class='cur' onclick="editField(event,'{{ item.id }}', 'min_vid', '{{ item.min_v}}')">{{ item.min_v }}</td>
+            <td class='cur' onclick="editField(event,'{{ item.id }}', 'max_v', '{{ item.max_v }}')">{{ item.max_v }}</td>
             <td>{{item.num_video}}</td>
             <td>{{item.creation_date}}</td>
+            <td>
+              <button >DELETE</button>
+            </td>
             
             
         </tr>

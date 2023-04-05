@@ -253,7 +253,9 @@ def login(request):
 #logout view
 def logout(request):
     auth_logout(request)
-    return redirect('search')
+    return redirect('welcome')
+def welcome(request):
+    return render(request,'welcome.html')
 
                 
 
