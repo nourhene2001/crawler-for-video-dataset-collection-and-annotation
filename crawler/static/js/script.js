@@ -30,39 +30,48 @@ $.ajaxSetup({
 });
 
 function editField(event, itemId, fieldName, fieldValue) {
-  // Get the cell that was clicked
-  const cell = event.target;
+    // Get the cell that was clicked
+    const cell = event.target;
+    // Create a new input field
+    const inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.value = fieldValue;
+    inputField.classList.add('input-field'); // Add a class to the input field
+    
+    // Replace the text in the cell with the input field
+    cell.textContent = '';
+    cell.appendChild(inputField);
+  
+    // Set focus on the input field
+    inputField.focus();
+  
+    // Add an event listener to the input field
+    inputField.addEventListener('blur', function() {
+      const newValue = inputField.value;
+  
+      // Send the new value to the server using an AJAX request
+      const xhr = new XMLHttpRequest();
+      const url = '/update_dataset/';
+      xhr.open('POST', url);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('X-CSRFToken', csrftoken);
+      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-  // Create a new input field
-  const inputField = document.createElement('input');
-  inputField.type = 'text';
-  inputField.value = fieldValue;
-
-  // Replace the text in the cell with the input field
-  cell.textContent = '';
-  cell.appendChild(inputField);
-
-  // Set focus on the input field
-  inputField.focus();
-
-  // Add an event listener to the input field
-  inputField.addEventListener('blur', function() {
-    const newValue = inputField.value;
-
-    // Send the new value to the server using an AJAX request
-    const xhr = new XMLHttpRequest();
-    const url = '/update_d/';
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        // Replace the input field with the new value
-        cell.removeChild(inputField);
-        cell.textContent = newValue;
-      }
-    };
-    xhr.setRequestHeader('X-CSRFToken', csrftoken);
-    const csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-    xhr.send(`item_id=${itemId}&field_name=${fieldName}&field_value=${newValue}&csrfmiddlewaretoken=${csrfmiddlewaretoken}`);
-  });
-}
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log('hh')
+          // Replace the input field with the new value
+          cell.removeChild(inputField);
+          cell.textContent = newValue;
+        }
+      };
+      const data = {
+        data_id: itemId,
+        field_name: fieldName,
+        field_value: newValue,
+      };
+      console.log(data)
+      xhr.send(JSON.stringify(data));
+    });
+  }
+  

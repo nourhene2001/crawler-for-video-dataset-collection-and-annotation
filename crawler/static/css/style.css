@@ -182,3 +182,11 @@ svg{
 .collapse {
   transition: height 0.3s ease;
 }
+.input-field {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  border-radius: 0px;
+}
+

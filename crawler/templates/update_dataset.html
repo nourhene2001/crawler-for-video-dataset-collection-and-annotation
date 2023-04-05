@@ -4,9 +4,10 @@
 
 {% block content %}
 <script src="{% static 'js/script.js' %}"></script>
+
 <h1>update dataset</h1>
 
-<table class="table table-striped">
+<table class="table table-bordered">
   <tr>
       <th>ID</th>
       <th>Name</th>
@@ -15,10 +16,6 @@
       <th>max video</th>
       <th>video number</th>
       <th>creation data</th>
-      
-     
-
-
     </tr>
     
     {% for item in data %}

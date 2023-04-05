@@ -12,5 +12,5 @@ urlpatterns=[
     path('update_d/',views.display_dataset,name='update_d'),
     path('check/',views.choice_d,name="check"),
     #path('update_d/update/<str:name>/', views.update, name='update'),
-    path('update_d/',views.update_dataset,name='update_d')
+    path('update_dataset/',views.update_dataset,name='update_dataset')
 ]

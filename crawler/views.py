@@ -33,12 +33,14 @@ def run_spider(query,max_items,duration):
 @login_required
 @csrf_exempt
 def update_dataset(request):
-    if request.method == 'POST' and request.is_ajax():
-        print('§§§§§§§§§§§§§§§§§§§§§§§§§§§§§')
-        data_id = request.POST.get('data_id')
-        field_name = request.POST.get('field_name')
-        field_value = request.POST.get('field_value')
-
+    print('§§§§§§§§§§§§§§§§§§§§s')
+    if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+        data = json.loads(request.body)
+        data_id = data.get('data_id')
+        field_name = data.get('field_name')
+        field_value = data.get('field_value')
+        print(field_value)
         dataset = datasetModel.objects.get(id=data_id)
         setattr(dataset, field_name, field_value)
         dataset.save()
