@@ -256,6 +256,19 @@ def logout(request):
     return redirect('welcome')
 def welcome(request):
     return render(request,'welcome.html')
+@login_required
+def delete(request):
+    if request.method=='post':
+        d_id = request.POST.get('id')
+        print('!!!!!!!!!!')
+        print(d_id)
+        dataset = datasetModel.objects.get(id=d_id)
+        dataset.delete()
+        data = datasetModel.objects.all()
+        return render(request,'update_dataset.html',{'data': data})
 
+    else:
+       data=datasetModel.objects.all()
+       return render(request, 'update_dataset.html', {'data': data}) 
                 
 
