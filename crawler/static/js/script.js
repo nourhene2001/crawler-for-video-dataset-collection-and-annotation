@@ -74,4 +74,23 @@ function editField(event, itemId, fieldName, fieldValue) {
       xhr.send(JSON.stringify(data));
     });
   }
+  function deleteItem(itemId) {
+    
+    // Send the new value to the server using an AJAX request
+    const xhr = new XMLHttpRequest();
+    const url = '/delete/';
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+          console.log('hh')
+        // Replace the input field with the new value
+        
+      }
+    };
+  }
+  
   

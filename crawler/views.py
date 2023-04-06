@@ -152,14 +152,19 @@ def update(request,name):
 @login_required
 def choice_d(request):
     form = dataForm()
-    form2=datasetForm3
+    form2=datasetForm3()
     if request.method=='POST':
+        print("MMMMMMMMMMMMMMMM")
+        form=dataForm(request.POST)
         form2=datasetForm3(request.POST)
         selected_elements = request.POST.getlist('selected_elements')
-        if form.is_valid() and form2.is_valid:
+        print(selected_elements)
+        if form.is_valid():
+            print("jjjjjjjjjjjMMMMMMMMjjjjjjjj")
             videoformat = form.cleaned_data['videoformat']
             resolution = form.cleaned_data['resolution']
             selected_data=dataModel.objects.filter(id__in=selected_elements)
+            print("jjjjjjjjjjjjjjjjjjjjjjjjj")
             print(selected_data)
             selected_data.update(videoformat=videoformat, resolution=resolution)
             if form2.is_valid():

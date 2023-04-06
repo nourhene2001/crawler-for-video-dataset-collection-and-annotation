@@ -17,12 +17,9 @@
 <body>
 <div class="row">
   <div class="item1" >
-    <div id="text">
+    
   <div id="item1" class="d-flex flex-column flex-shrink-0  text-white  bg-dark c">
-    <a href="{% url 'main' %}"  class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-      Home
-      
-    </a>
+    <div id="text">
     
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="mb-1" class="nav-link text-white">
@@ -51,7 +48,7 @@
       
     </ul>
     <hr>
-    <div class="dropdown">
+    <div class="dropdown" >
       <ul>
                     
         {% if user.is_authenticated %}

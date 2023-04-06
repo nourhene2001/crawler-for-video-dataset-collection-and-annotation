@@ -36,7 +36,7 @@ ul {
   }
 
   button[type="submit"] {
-    background-color: #D5B4B4;
+    background-color: #576c84;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -52,7 +52,7 @@ ul {
     background-color: #727e8b;
   }
   .b{
-    background-color: #D5B4B4;
+    background-color: #576c84;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -155,7 +155,7 @@ li{
   padding : 0px;
 }
 
-.nav-link:hover{
+a.nav-link:hover{
 background-color: #727e8b;
 border-radius: 10px;
 margin-right:5px;
@@ -223,10 +223,10 @@ svg:hover{
 }
 table {
   border-collapse: collapse;
-  border-color: #b09a9a;
+  border-color: #576c84;
 }
 td{
-  padding:0px;
+  padding:2px !important;
 }
 .cur{
   cursor: pointer;
@@ -236,7 +236,7 @@ tr{
   overflow: auto; /* show scrollbar if content overflows */
 }
 th:hover{
-  background-color: #867070;
+  background-color: #576c84;
 }
 
 
@@ -263,4 +263,10 @@ th:hover{
 }
 #content.collapsed {
   margin-left: 50px; /* move content to the left when collapsed */
+}
+.item2 button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
 }

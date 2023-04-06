@@ -23,7 +23,7 @@
         <tr >
           <form  method='POST'  action="{% url 'delete' %}">
             {% csrf_token %}
-            <td> <input type="text" hidden name="id" value="{{ item.id }}">{{ item.id }}</td>
+            <td>{{ item.id }}</td>
             <td class='cur' onclick="editField(event,'{{ item.id }}', 'name', '{{ item.name }}')">{{ item.name }}</td>
             <td class='cur'  onclick="editField(event,'{{ item.id }}', 'description', '{{ item.description }}')">{{item.description}}</td>
             <td class='cur' onclick="editField(event,'{{ item.id }}', 'min_vid', '{{ item.min_v}}')">{{ item.min_v }}</td>
@@ -32,7 +32,7 @@
             <td>{{item.creation_date}}</td>
             <td>
               
-              <button type="submit">DELETE</button>
+              <button type="submit" class="delete-button" data-item-id="{{ item.id }}">DELETE</button>
             </td>
             
             </form> 
