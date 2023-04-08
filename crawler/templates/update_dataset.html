@@ -7,6 +7,8 @@
 
 <h1>update dataset</h1>
 <p>click on the field you want to update</p>
+<form method="post" action="{% url 'update_d' %}">
+  {% csrf_token %}
 <table class="table table-bordered">
   <tr>
       <th class='cur'>ID</th>
@@ -21,29 +23,29 @@
     
     {% for item in data %}
         <tr >
-          <form  method='POST'  action="{% url 'delete' %}">
-            {% csrf_token %}
+       
             <td>{{ item.id }}</td>
-            <td class='cur' onclick="editField(event,'{{ item.id }}', 'name', '{{ item.name }}')">{{ item.name }}</td>
-            <td class='cur'  onclick="editField(event,'{{ item.id }}', 'description', '{{ item.description }}')">{{item.description}}</td>
-            <td class='cur' onclick="editField(event,'{{ item.id }}', 'min_vid', '{{ item.min_v}}')">{{ item.min_v }}</td>
-            <td class='cur' onclick="editField(event,'{{ item.id }}', 'max_v', '{{ item.max_v }}')">{{ item.max_v }}</td>
+            <td >{{ item.name }}</td>
+            <td >{{item.description}}</td>
+            <td >{{ item.min_v }}</td>
+            <td >{{ item.max_v }}</td>
             <td>{{item.num_video}}</td>
             <td>{{item.creation_date}}</td>
             <td>
-              
-              <button type="submit" class="delete-button" data-item-id="{{ item.id }}">DELETE</button>
+              {% csrf_token %}
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <button type="submit" name="delete" id="delete" >DELETE </button>
+              <button type="submit" name="update" id="update"  >UPDATE</button>
             </td>
             
-            </form> 
+            
         </tr>
     {% endfor %}
 
 </table>
-
+</form>
   
     
-{% csrf_token %} <!-- add this line to define the CSRF token variable -->
 
 
     

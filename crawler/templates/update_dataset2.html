@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}new dataset{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/script.js' %}"></script>
+<h1>General settings</h1>
+<hr>
+<form method="post" action="{% url 'update' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+                
+<button type="submit">Done</button>
+</form>
+<hr>
+<h1>Video settings</h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+{% endblock %}

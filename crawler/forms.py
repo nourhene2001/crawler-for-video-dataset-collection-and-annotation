@@ -6,7 +6,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-
+from django.core.validators import FileExtensionValidator
+from tkinter import Tk, filedialog
 class QForm(forms.Form):
     query = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'placeholder': 'what are you looking for ?'}))
     #content_type = forms.BooleanField(label='content type', required=False)
@@ -49,42 +50,52 @@ class RegistrationForm(UserCreationForm):
 
 class datasetForm1(forms.ModelForm):
     form1_name = forms.CharField(label='form1_name', max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name','required': False}))
+    
 
     class Meta:
         model = datasetModel
-        fields = ("form1_name", "min_v","max_v","description")
+        fields = ("form1_name", "min_v","max_v","description","folder")
         widgets = {
+            
             'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False}),
             'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': False}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': False})
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': True}),
+            'folder':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'folder', 'required': True}),
         }
 
 
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.name = self.cleaned_data['form1_name']
+        
+    
         if commit:
             instance.save()
         return instance
 #update
 class datasetForm2(forms.ModelForm):
-
+    OPTIONS = [('in progress',"in progress"),('completed',"completed")]
+    status = forms.ChoiceField(label='status', choices=[(choice, choice) for choice in OPTIONS], required=True, widget=forms.Select(attrs={'required': True}))
     form2_name = forms.CharField(label='form2_name', max_length=255, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name','required': True}))
-
+    
     class Meta:
         model = datasetModel
-        fields = ("id", "min_v","max_v","description")
+        fields = ("id", "min_v","max_v","description","desired_num","status")
         widgets = {
             'id' : forms.IntegerField(widget=forms.HiddenInput()),
             'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': True}),
             'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': True}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': True})
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': True}),
+            'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'author', 'required': True}),
+
         }
+
 
 
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.name = self.cleaned_data['form2_name']
+        instance.name = self.cleaned_data['status']
         if commit:
             instance.save()
         return instance

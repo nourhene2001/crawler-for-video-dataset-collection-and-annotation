@@ -30,7 +30,7 @@ def run_spider(query,max_items,duration):
     spider_cls = YoutubeSpider
     process.crawl(spider_cls,query=query,max_items=max_items,duration=duration)
     process.start()
-@login_required
+"""@login_required
 @csrf_exempt
 def update_dataset(request):
     print('§§§§§§§§§§§§§§§§§§§§s')
@@ -47,7 +47,7 @@ def update_dataset(request):
 
         return JsonResponse({'success': True})
 
-    return JsonResponse({'success': False})
+    return JsonResponse({'success': False})"""
 @login_required
 def display_dataset(request):
     data=datasetModel.objects.all()
@@ -121,33 +121,42 @@ def create_d(request):
             new_obj.save()
     return render(request, 'new_dataset.html',{'form_create': form_create})
 #choose the dataset to update
-"""@login_required
+@login_required
 def update_d(request):
-    form3=datasetForm3()
     if request.method == 'POST':
-        form3 = datasetForm3(request.POST)
-        if form3.is_valid():
-            name=form3.cleaned_data['form3_name']
-            return redirect('update', name=name)
-    return render(request,'update_dataset.html', {'form3': form3})
+        if 'update' in request.POST:
+            print("updaaaaaaaaaate")
+            item_id = request.POST.get('item_id')
+            print(item_id)
+            instance=datasetModel.objects.get(id=item_id)
+            form = datasetForm2(instance=instance)
+            return render(request, 'update_dataset2.html', {'form': form})
+
+        elif 'delete' in request.POST:
+            item_id = request.POST.get('item_id')
+            instance=datasetModel.objects.get(id=item_id)
+            instance.delete()
+        return render(request,'update_dataset.html')
+    return render(request,'update_dataset.html')
 #update the dataset
 @login_required
-def update(request,name):
-    i = datasetModel.objects.get(name=name)
-    id=i.id
-    instance=datasetModel.objects.get(id=id)
-    form2 = datasetForm2(instance=instance)
+def update(request):
     if request.method == 'POST':
         print('§§§§§§§§§§§§§§§§§§§§§§§§§§§§')
-        form2 = datasetForm2(request.POST, instance=instance)
+        form2 = datasetForm2(request.POST)
         if form2.is_valid():
+            item_id=form2.cleaned_data['id']
             name=form2.cleaned_data['form2_name']
             min_v=form2.cleaned_data['min_v']
             max_v=form2.cleaned_data['max_v']
             description=form2.cleaned_data['description']
-            instance.update(name=name,min_v=min_v,max_v=max_v,description=description)
+            status=form2.cleaned_data['status']
+            author=form2.cleaned_data['author']
+            desired_num=form2.cleaned_data['desired_num']
+            instance=datasetModel.objects.get(id=item_id)
+            instance.update(name=name,min_v=min_v,max_v=max_v,description=description,author=author,desired_num=desired_num,status=status)
             instance.save()
-    return render(request,'update_dataset.html', {'form2': form2})"""
+    return render(request,'update_dataset2.html', {'form2': form2})
 #after result page choose
 @login_required
 def choice_d(request):
@@ -276,4 +285,3 @@ def delete(request):
        data=datasetModel.objects.all()
        return render(request, 'update_dataset.html', {'data': data}) 
                 
-
