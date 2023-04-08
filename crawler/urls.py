@@ -15,5 +15,5 @@ urlpatterns=[
     path('check/',views.choice_d,name="check"),
     path('update/', views.update, name='update'),
     #path('update_dataset/',views.update_dataset,name='update_dataset'),
-    path('delete/',views.delete,name="delete")
+    
 ]

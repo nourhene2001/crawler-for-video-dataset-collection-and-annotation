@@ -24,7 +24,7 @@
     {% for item in data %}
         <tr >
        
-            <td>{{ item.id }}</td>
+            <td><input type="hidden" name="item_id" value="{{ item.id }}">{{ item.id }}</td>
             <td >{{ item.name }}</td>
             <td >{{item.description}}</td>
             <td >{{ item.min_v }}</td>
@@ -33,7 +33,7 @@
             <td>{{item.creation_date}}</td>
             <td>
               {% csrf_token %}
-              <input type="hidden" name="item_id" value="{{ item.id }}">
+              
               <button type="submit" name="delete" id="delete" >DELETE </button>
               <button type="submit" name="update" id="update"  >UPDATE</button>
             </td>
@@ -45,21 +45,5 @@
 </table>
 </form>
   
-    
-
-
-    
- 
-
-          
-
-            
-    
-
-    
-    
-    
-
-
     
 {% endblock %}

@@ -128,16 +128,20 @@ def update_d(request):
             print("updaaaaaaaaaate")
             item_id = request.POST.get('item_id')
             print(item_id)
-            instance=datasetModel.objects.get(id=item_id)
+            instance = datasetModel.objects.get(id=item_id)
+            print(instance)
             form = datasetForm2(instance=instance)
-            return render(request, 'update_dataset2.html', {'form': form})
-
+            #ejbd l vid eli feha o o infos mte3hm o display
+            return render(request, 'update_dataset2.html',context={'form': form})
         elif 'delete' in request.POST:
             item_id = request.POST.get('item_id')
-            instance=datasetModel.objects.get(id=item_id)
+            instance = datasetModel.objects.get(id=item_id)
             instance.delete()
-        return render(request,'update_dataset.html')
-    return render(request,'update_dataset.html')
+            return render(request, 'update_dataset.html')
+
+    data = datasetModel.objects.all()
+    return render(request, 'update_dataset.html', {'data': data})
+
 #update the dataset
 @login_required
 def update(request):
@@ -157,6 +161,7 @@ def update(request):
             instance.update(name=name,min_v=min_v,max_v=max_v,description=description,author=author,desired_num=desired_num,status=status)
             instance.save()
     return render(request,'update_dataset2.html', {'form2': form2})
+
 #after result page choose
 @login_required
 def choice_d(request):
@@ -270,18 +275,5 @@ def logout(request):
     return redirect('welcome')
 def welcome(request):
     return render(request,'welcome.html')
-@login_required
-def delete(request):
-    if request.method=='post':
-        d_id = request.POST.get('id')
-        print('!!!!!!!!!!')
-        print(d_id)
-        dataset = datasetModel.objects.get(id=d_id)
-        dataset.delete()
-        data = datasetModel.objects.all()
-        return render(request,'update_dataset.html',{'data': data})
 
-    else:
-       data=datasetModel.objects.all()
-       return render(request, 'update_dataset.html', {'data': data}) 
                 
