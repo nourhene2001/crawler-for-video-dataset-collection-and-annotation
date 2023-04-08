@@ -33,7 +33,7 @@ class datasetModel(models.Model):
     videos = models.ManyToManyField(dataModel, through='video_dataset',through_fields=('dataset', 'videos'))
     folder = models.CharField(max_length=255, blank=True)  # new field for folder path
     OPTIONS=[('in progress',"in progress"),('completed',"completed")]
-    videoformat = models.CharField(max_length=20, choices=OPTIONS,default="in progress")
+    status = models.CharField(max_length=20, choices=OPTIONS,default="in progress")
     desired_num=models.IntegerField(default=0)
     author=models.CharField(max_length=1000,blank=True)
     def __iter__(self):

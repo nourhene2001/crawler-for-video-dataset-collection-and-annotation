@@ -75,7 +75,7 @@ class datasetForm1(forms.ModelForm):
 #update
 class datasetForm2(forms.ModelForm):
     OPTIONS = [('in progress',"in progress"),('completed',"completed")]
-    status = forms.ChoiceField(label='status', choices=[(choice, choice) for choice in OPTIONS], required=True, widget=forms.Select(attrs={'required': True}))
+    status = forms.ChoiceField(label='status', choices=OPTIONS, required=True, widget=forms.Select(attrs={'required': True}))
     form2_name = forms.CharField(label='form2_name', max_length=255, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name','required': True}))
     
     class Meta:

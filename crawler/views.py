@@ -140,7 +140,7 @@ def update_d(request):
             return render(request, 'update_dataset.html')
 
     data = datasetModel.objects.all()
-    return render(request, 'update_dataset.html', {'data': data})
+    return render(request, 'update_dataset.html', {'data': data,'form':form})
 
 #update the dataset
 @login_required
