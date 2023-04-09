@@ -187,32 +187,36 @@ def update(request):
             selected_data=instance.videos.filter(id__in=selected_elements)
             print(selected_data)
             selected_data.delete()
-            data = datasetModel.objects.all()
-            return render(request, 'update_dataset.html', {'data': data})
+            form = datasetForm2(instance=instance)
+            videos = instance.videos.all()
+            print(videos)
+            return render(request, 'update_dataset2.html',context={'form': form,'videos': videos})
         elif 'download' in request.POST:
             videos = instance.videos.all()
             downloaded_videos = []
             for video in videos:
                 yt = pytube.YouTube(video.url)
-                print(instance.folder)
-                print(video.videoformat)
-                print(video.resolution)
+                
                 stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
                 if stream is not None:
+                    print("!!!!!!!!!!!!")
                     print(stream)
-                    video_path = stream.download(output_path="instance.folder")
+                    video_path = stream.download(output_path=instance.folder)
                     print(video_path)
                     downloaded_videos.append(video_path)
                 else:
+                    print("???????")
                     stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
-                    video_path = stream.download(output_path="instance.folder")
+                    video_path = stream.download(output_path=instance.folder)
                     print(video_path)
                     downloaded_videos.append(video_path)
 
             # create a zip file containing all the downloaded videos
-            zip_path = os.path.join(instance.folder, 'videos.zip')
+            """zip_path = os.path.join(instance.folder, 'videos.zip')
+            print(zip_path)
             with ZipFile(zip_path, 'w') as zip_file:
                 for video_path in downloaded_videos:
+                    
                     video_name = os.path.basename(video_path)
                     zip_file.write(video_path, video_name)
 
@@ -220,7 +224,7 @@ def update(request):
             with open(zip_path, 'rb') as f:
                 response = HttpResponse(f.read(), content_type='application/zip')
                 response['Content-Disposition'] = 'attachment; filename=videos.zip'
-                return response
+                return response"""
         data = datasetModel.objects.all()
     return render(request, 'update_dataset.html', {'data': data})
 

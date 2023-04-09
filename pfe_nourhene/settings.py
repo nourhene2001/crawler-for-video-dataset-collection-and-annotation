@@ -44,8 +44,9 @@ INSTALLED_APPS = [
     'scrape',
     'rest_framework',
     "bootstrap5",
-    
-
+    'django_celery_beat',
+    'django_celery_results',
+    'django.contrab',
 
    
 ]
