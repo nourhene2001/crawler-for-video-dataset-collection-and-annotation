@@ -49,44 +49,58 @@ class RegistrationForm(UserCreationForm):
 #create
 
 class datasetForm1(forms.ModelForm):
-    form1_name = forms.CharField(label='form1_name', max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name','required': False}))
     
-
     class Meta:
         model = datasetModel
-        fields = ("form1_name", "min_v","max_v","description","folder")
+        fields = ("name", "min_v","max_v","description","folder","author","desired_num")
+        labels = {
+            
+            'min_v': 'minimum number of videos',
+            'max_v': 'maximum number of videos',
+            'desired_num': 'desired number of videos',
+            'folder':'folder path',
+
+        }
         widgets = {
             
-            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False}),
-            'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': False}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': True}),
-            'folder':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'folder', 'required': True}),
+            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'minimum number of videos', 'required': False}),
+            'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'maximum number of videos', 'required': False}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description..', 'required': True}),
+            'folder':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'where your videos will be stored.. ', 'required': True}),
         }
 
 
-    def save(self, commit=True):
+    """def save(self, commit=True):
         instance = super().save(commit=False)
         instance.name = self.cleaned_data['form1_name']
         
     
         if commit:
             instance.save()
-        return instance
+        return instance"""
 #update
 class datasetForm2(forms.ModelForm):
     OPTIONS = [('in progress',"in progress"),('completed',"completed")]
-    status = forms.ChoiceField(label='status', choices=OPTIONS, required=True, widget=forms.Select(attrs={'required': True}))
-    form2_name = forms.CharField(label='form2_name', max_length=255, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter dataset name','required': True}))
+    status = forms.ChoiceField(label='status', choices=OPTIONS, required=True, widget=forms.Select(attrs={'required': False}))
     
     class Meta:
         model = datasetModel
-        fields = ("id", "min_v","max_v","description","desired_num","status")
+        fields = ("name","description","id", "min_v","max_v","description","desired_num","status","author","folder")
+        labels = {
+            'min_v': 'minimum number of videos',
+            'max_v': 'maximum number of videos',
+            'desired_num': 'desired number of videos',
+            'folder':'folder path',
+
+            
+
+        }
         widgets = {
-            'id' : forms.IntegerField(widget=forms.HiddenInput()),
-            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': True}),
-            'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': True}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': True}),
-            'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'author', 'required': True}),
+            'id': forms.TextInput(attrs={'class': 'form-control', 'hidden': True}),
+            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False}),
+            'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': False}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': False}),
+            'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'author', 'required': False}),
 
         }
 
@@ -94,8 +108,8 @@ class datasetForm2(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        instance.name = self.cleaned_data['form2_name']
-        instance.name = self.cleaned_data['status']
+        
+        instance.status = self.cleaned_data['status']
         if commit:
             instance.save()
         return instance

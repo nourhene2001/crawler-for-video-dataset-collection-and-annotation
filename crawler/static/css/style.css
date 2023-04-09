@@ -193,7 +193,7 @@ svg{
   width: 35px;
   height: 35px;
   margin-top: 20px;
-  
+  position: fixed;
   cursor:pointer;
 }
 svg:hover{
@@ -269,4 +269,12 @@ th:hover{
   background: none;
   padding: 0;
   margin: 0;
+  
+}
+.box{
+border-radius: 10px;
+
+}
+#collapse-btn{
+  position:fixed;
 }

@@ -11,7 +11,7 @@ urlpatterns=[
     path('create_d/',views.create_d,name='create_d'),
     path('display/',views.display_dataset,name='display'),
     path('update_d/',views.update_d,name='update_d'),
-    
+    path('delete_vid/', views.delete_vid, name='delete_vid'),
     path('check/',views.choice_d,name="check"),
     path('update/', views.update, name='update'),
     #path('update_dataset/',views.update_dataset,name='update_dataset'),

@@ -7,8 +7,7 @@
 
 <h1>update dataset</h1>
 <p>click on the field you want to update</p>
-<form method="post" action="{% url 'update_d' %}">
-  {% csrf_token %}
+
 <table class="table table-bordered">
   <tr>
       <th class='cur'>ID</th>
@@ -18,22 +17,30 @@
       <th class='cur'>max video</th>
       <th class='cur'>video number</th>
       <th class='cur'>creation data</th>
+      <th>status</th>
       <th class='cur'>action</th>
     </tr>
     
     {% for item in data %}
         <tr >
-       
-            <td><input type="hidden" name="item_id" value="{{ item.id }}">{{ item.id }}</td>
+          
+          
+            <td>
+              {{ item.id }}</td>
             <td >{{ item.name }}</td>
             <td >{{item.description}}</td>
             <td >{{ item.min_v }}</td>
             <td >{{ item.max_v }}</td>
             <td>{{item.num_video}}</td>
             <td>{{item.creation_date}}</td>
+            <td>{{item.status}}</td>
             <td>
+              <form method="post" action="{% url 'update_d' %}">
+                {% csrf_token %}
+                <input type="hidden" name="item_id_{{ item.id }}" value="{{ item.id }}">
               <button type="submit" name="delete" id="delete" >DELETE </button>
-              <button type="submit" name="update" id="update"  >UPDATE</button>
+              <button type="submit" name="update" id="update" >UPDATE</button>
+              </form>
             </td>
             
             
@@ -41,7 +48,7 @@
     {% endfor %}
 
 </table>
-</form>
+
   
     
 {% endblock %}

@@ -1,10 +1,12 @@
 
 from multiprocessing import Process
+from zipfile import ZipFile
 import django
 import json
 
 from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
+
 django.setup()
 import os
 from django import apps
@@ -23,8 +25,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from datetime import datetime
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-
-#fun to run the spider
+import pytube
 def run_spider(query,max_items,duration):
     process = CrawlerProcess(get_project_settings())
     spider_cls = YoutubeSpider
@@ -77,7 +78,7 @@ def search(request):
              # get the time when the form was submitted
             for item in data:
                 new_data = dataModel.objects.create(
-                    
+                    id_vid=item['id_vid'],
                     title=item['title'],
                     views=item['views'],
                     duration=item['duration'],
@@ -124,23 +125,27 @@ def create_d(request):
 @login_required
 def update_d(request):
     if request.method == 'POST':
+        for key, value in request.POST.items():
+            if key.startswith('item_id_'):
+                item_id = value
+                break
+        instance = datasetModel.objects.get(id=item_id)
+        print(item_id)
         if 'update' in request.POST:
             print("updaaaaaaaaaate")
-            item_id = request.POST.get('item_id')
             print(item_id)
-            instance = datasetModel.objects.get(id=item_id)
             print(instance)
             form = datasetForm2(instance=instance)
-            #ejbd l vid eli feha o o infos mte3hm o display
-            return render(request, 'update_dataset2.html',context={'form': form})
+            videos = instance.videos.all()
+            print(videos)
+            return render(request, 'update_dataset2.html',context={'form': form,'videos': videos})
         elif 'delete' in request.POST:
-            item_id = request.POST.get('item_id')
-            instance = datasetModel.objects.get(id=item_id)
             instance.delete()
-            return render(request, 'update_dataset.html')
+            data = datasetModel.objects.all()
+            return render(request, 'update_dataset.html', {'data': data})
 
     data = datasetModel.objects.all()
-    return render(request, 'update_dataset.html', {'data': data,'form':form})
+    return render(request, 'update_dataset.html', {'data': data})
 
 #update the dataset
 @login_required
@@ -148,19 +153,76 @@ def update(request):
     if request.method == 'POST':
         print('§§§§§§§§§§§§§§§§§§§§§§§§§§§§')
         form2 = datasetForm2(request.POST)
-        if form2.is_valid():
-            item_id=form2.cleaned_data['id']
-            name=form2.cleaned_data['form2_name']
+        item_id=request.POST.get('id')
+        instance=datasetModel.objects.get(id=item_id)
+        if 'update_dataset' in request.POST and form2.is_valid():
+            
+            print(item_id)
+            name=form2.cleaned_data['name']
             min_v=form2.cleaned_data['min_v']
             max_v=form2.cleaned_data['max_v']
             description=form2.cleaned_data['description']
             status=form2.cleaned_data['status']
             author=form2.cleaned_data['author']
             desired_num=form2.cleaned_data['desired_num']
-            instance=datasetModel.objects.get(id=item_id)
-            instance.update(name=name,min_v=min_v,max_v=max_v,description=description,author=author,desired_num=desired_num,status=status)
+            #don't forget errors
+           
+            
+            instance.name = name
+            instance.min_v = min_v
+            instance.max_v = max_v
+            instance.description = description
+            instance.status = status
+            instance.author = author
+            instance.desired_num = desired_num
+                
             instance.save()
-    return render(request,'update_dataset2.html', {'form2': form2})
+                
+            data = datasetModel.objects.all()
+            return render(request, 'update_dataset.html', {'data': data})
+        elif 'delete_video' in request.POST:
+            print('!!!!!!!!!!!!!!!!!')
+            selected_elements = request.POST.getlist('selected_elements')
+            print(selected_elements)
+            selected_data=instance.videos.filter(id__in=selected_elements)
+            print(selected_data)
+            selected_data.delete()
+            data = datasetModel.objects.all()
+            return render(request, 'update_dataset.html', {'data': data})
+        elif 'download' in request.POST:
+            videos = instance.videos.all()
+            downloaded_videos = []
+            for video in videos:
+                yt = pytube.YouTube(video.url)
+                print(instance.folder)
+                print(video.videoformat)
+                print(video.resolution)
+                stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
+                if stream is not None:
+                    print(stream)
+                    video_path = stream.download(output_path="instance.folder")
+                    print(video_path)
+                    downloaded_videos.append(video_path)
+                else:
+                    stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
+                    video_path = stream.download(output_path="instance.folder")
+                    print(video_path)
+                    downloaded_videos.append(video_path)
+
+            # create a zip file containing all the downloaded videos
+            zip_path = os.path.join(instance.folder, 'videos.zip')
+            with ZipFile(zip_path, 'w') as zip_file:
+                for video_path in downloaded_videos:
+                    video_name = os.path.basename(video_path)
+                    zip_file.write(video_path, video_name)
+
+            # send the zip file as a response
+            with open(zip_path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/zip')
+                response['Content-Disposition'] = 'attachment; filename=videos.zip'
+                return response
+        data = datasetModel.objects.all()
+    return render(request, 'update_dataset.html', {'data': data})
 
 #after result page choose
 @login_required
@@ -275,5 +337,6 @@ def logout(request):
     return redirect('welcome')
 def welcome(request):
     return render(request,'welcome.html')
-
+def delete_vid(request):
+    return render(request,'update_dataset2.html')
                 

@@ -50,11 +50,12 @@ class YoutubeSpider(scrapy.Spider):
                 #youtube obj with the video url provided
             yt = YouTube(video_url)
                 #we extract the needed infos
+            id_vid=yt.video_id
             title=yt.title
             views = yt.views
             duration = yt.length
             description = yt.description
-            
+            items['id_vid']=id_vid
             items['title']=title
             items['views']=views
             items['duration']=duration

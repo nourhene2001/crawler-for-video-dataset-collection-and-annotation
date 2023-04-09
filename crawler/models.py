@@ -6,6 +6,7 @@ from django.db import models
 
 class dataModel(models.Model):
     id=models.AutoField(primary_key=True)
+    id_vid=models.CharField(max_length=255,blank=True)
     title = models.CharField(max_length=100)
     views = models.IntegerField()
     duration = models.CharField(max_length=255)
@@ -24,7 +25,7 @@ class dataModel(models.Model):
 
 class datasetModel(models.Model):
     id=models.AutoField(primary_key=True)
-    name= models.CharField(max_length=255, unique=True)
+    name= models.CharField(max_length=255)
     creation_date=models.DateTimeField()
     num_video=models.IntegerField(default=0)
     min_v=models.CharField(max_length=255, blank=True)
@@ -44,7 +45,7 @@ class video_dataset(models.Model):
     dataset = models.ForeignKey(datasetModel, on_delete=models.CASCADE)
     videos = models.ForeignKey(dataModel, on_delete=models.CASCADE)
     added_date = models.DateTimeField(auto_now_add=True) 
-
+    
 
 
 

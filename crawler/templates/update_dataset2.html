@@ -4,38 +4,82 @@
 
 {% block content %}
 <script src="{% static 'js/script.js' %}"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- YouTube Player API -->
+
+
 <h1>General settings</h1>
 <hr>
 <form method="post" action="{% url 'update' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-                    
-    <button type="submit">Done</button>
-</form>
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+    <input type="hidden" name="id" value="{{ form.instance.id }}">
+<button type="submit" name="update_dataset" id="update_dataset">Done</button>
+ <button type="submit" id="download" name="download">start downloading</button>
+
 <hr>
 <h1>Video settings</h1>
 
+    <table class="table table-bordered">
+        <tr>
+            <th>   </th>
+            <th class='cur'>ID</th>
+            <th class='cur'>Name</th>
+            <th class='cur'>description</th>
+            <th class='cur'>url</th>
+            <th>actions</th>
+          </tr>
+          
+          {% for item in videos %}
+              <tr >
+                <td><input type="checkbox"  name="selected_elements" value="{{ item.id }}"></td>
+                  <td>{{ item.id }}</td>
+                  <td >{{ item.title }}</td>
+                  <td >{{item.description}}</td>
+                  <td >{{ item.url }}</td>
+
+                  <td>{% csrf_token %}
+                    <input type="hidden" class="id_vid" name="id_vid" value="{{ item.id_vid }}">
+                    <button type="button" class="preview-btn"  data-video-id="{{ item.id_vid }}">preview</button>
+                  </td>
+                
+             
+            </tr>
+            {% endfor %}
+    </table>
+    
+    <button type="submit" name="delete_video">delete</button>
+
+</form>
+<!-- Modal HTML code -->
+<div id="preview-modal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          
+          <iframe class="iframe" id="videoPreview" width="100%" height="500" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- JavaScript code -->
+
+<script>
+$(document).ready(function() {
+  $('.preview-btn').click(function() {
+    var videoId = $(this).data('video-id');
+    var videoUrl = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+    $('#videoPreview').attr('src', videoUrl);
+    $('#preview-modal').modal('show');
+  });
+});
+</script>
 
 
+ 
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
     
