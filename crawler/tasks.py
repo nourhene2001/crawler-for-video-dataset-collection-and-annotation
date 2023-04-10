@@ -18,8 +18,4 @@ def download_videos(instance):
             stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
             video_path = stream.download(output_path=video.folder)
             downloaded_videos.append(video_path)
-    zip_path = os.path.join(video.folder, 'videos.zip')
-    with ZipFile(zip_path, 'w') as zip_file:
-        for video_path in downloaded_videos:
-            video_name = os.path.basename(video_path)
-            zip_file.write(video_path, video_name)
+

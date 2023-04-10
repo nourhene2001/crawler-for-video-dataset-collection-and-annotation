@@ -26,6 +26,7 @@ ul {
   input[type="email"],
   input[type="number"],
   input[type="password"],
+  input[type="time"],
   select,
   textarea {
     padding: 5px;
@@ -35,7 +36,7 @@ ul {
     font-size: 16px;
   }
 
-  button[type="submit"] {
+  button[type="submit"],.st{
     background-color: #576c84;
     color: white;
     padding: 10px 20px;
@@ -49,6 +50,9 @@ ul {
     width: 100%;
   }
   button[type="submit"]:hover {
+    background-color: #727e8b;
+  }
+  .st:hover {
     background-color: #727e8b;
   }
   .b{
@@ -277,4 +281,14 @@ border-radius: 10px;
 }
 #collapse-btn{
   position:fixed;
+}
+.bss{
+  display: flex;
+  justify-items: center;
+margin:10px;
+  justify-content: space-around;
+}
+.bss button {
+  margin-right: 10px;
+  
 }

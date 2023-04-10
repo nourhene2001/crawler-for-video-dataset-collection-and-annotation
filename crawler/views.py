@@ -26,6 +26,9 @@ from datetime import datetime
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 import pytube
+import schedule
+import time
+
 def run_spider(query,max_items,duration):
     process = CrawlerProcess(get_project_settings())
     spider_cls = YoutubeSpider
@@ -108,7 +111,7 @@ def create_d(request):
     if request.method == 'POST':
         form_create=datasetForm1(request.POST)
         if form_create.is_valid():
-            name=form_create.cleaned_data['form1_name']
+            name=form_create.cleaned_data['name']
             min_v=form_create.cleaned_data['min_v']
             max_v=form_create.cleaned_data['max_v']
             description=form_create.cleaned_data['description']
@@ -120,6 +123,7 @@ def create_d(request):
                             description=description
                         )
             new_obj.save()
+    form_create=datasetForm1()
     return render(request, 'new_dataset.html',{'form_create': form_create})
 #choose the dataset to update
 @login_required
@@ -165,6 +169,7 @@ def update(request):
             status=form2.cleaned_data['status']
             author=form2.cleaned_data['author']
             desired_num=form2.cleaned_data['desired_num']
+            folder=form2.cleaned_data['folder']
             #don't forget errors
            
             
@@ -175,7 +180,7 @@ def update(request):
             instance.status = status
             instance.author = author
             instance.desired_num = desired_num
-                
+            instance.folder=folder 
             instance.save()
                 
             data = datasetModel.objects.all()
@@ -197,6 +202,34 @@ def update(request):
             for video in videos:
                 yt = pytube.YouTube(video.url)
                 
+                stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
+                if stream is not None:
+                    print("!!!!!!!!!!!!")
+                    print(stream)
+                    video_path = stream.download(output_path=instance.folder)
+                    print(video_path)
+                    downloaded_videos.append(video_path)
+                else:
+                    print("???????")
+                    stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
+                    video_path = stream.download(output_path=instance.folder)
+                    print(video_path)
+                    downloaded_videos.append(video_path)
+        elif 'wait' in request.POST:
+            time_sch = request.POST.get('time')
+            # Parse the time string to get hour and minute
+            hour, minute = map(int, time_sch.split(":"))
+            # Get the current time and calculate the number of seconds until the specified time
+            current_time = time.localtime()
+            seconds_until_scheduled_time = (hour - current_time.tm_hour) * 3600 + (minute - current_time.tm_min) * 60
+            # Wait until the scheduled time
+            time.sleep(seconds_until_scheduled_time)
+            # Execute the download task
+            videos = instance.videos.all()
+            downloaded_videos = []
+            for video in videos:
+                yt = pytube.YouTube(video.url)
+
                 stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
                 if stream is not None:
                     print("!!!!!!!!!!!!")

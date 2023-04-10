@@ -17,9 +17,11 @@
     
     {{ form.as_p }}
     <input type="hidden" name="id" value="{{ form.instance.id }}">
-<button type="submit" name="update_dataset" id="update_dataset">Done</button>
- <button type="submit" id="download" name="download">start downloading</button>
-
+    <div class="bss">
+<button type="submit" name="update_dataset" id="update_dataset">Update the dataset</button>
+ <button type="submit" id="download" name="download">update and start downloading</button>
+<button type="button" class="st" id="schedule" name="schedule" >schedule downloading</button>
+</div>
 <hr>
 <h1>Video settings</h1>
 
@@ -43,7 +45,7 @@
 
                   <td>{% csrf_token %}
                     <input type="hidden" class="id_vid" name="id_vid" value="{{ item.id_vid }}">
-                    <button type="button" class="preview-btn"  data-video-id="{{ item.id_vid }}">preview</button>
+                    <button type="button" class="preview-btn st" class="st" data-video-id="{{ item.id_vid }}">preview</button>
                   </td>
                 
              
@@ -53,7 +55,7 @@
     
     <button type="submit" name="delete_video">delete</button>
 
-</form>
+
 <!-- Modal HTML code -->
 <div id="preview-modal" class="modal">
     <div class="modal-dialog">
@@ -65,8 +67,19 @@
       </div>
     </div>
   </div>
-<!-- JavaScript code -->
-
+<!-- modal of schedule-->
+<div id="schedule-modal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          
+          <input type="time" name="time" id="time" placeholder="choose when you wnat to start downloading!">
+          <button type="submit" name="wait">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 <script>
 $(document).ready(function() {
   $('.preview-btn').click(function() {
@@ -75,6 +88,14 @@ $(document).ready(function() {
     $('#videoPreview').attr('src', videoUrl);
     $('#preview-modal').modal('show');
   });
+  
+});
+$(document).ready(function() {
+  $('#schedule').click(function() {
+    
+    $('#schedule-modal').modal('show');
+  });
+  
 });
 </script>
 

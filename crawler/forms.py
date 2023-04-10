@@ -95,16 +95,7 @@ class datasetForm2(forms.ModelForm):
             
 
         }
-        widgets = {
-            'id': forms.TextInput(attrs={'class': 'form-control', 'hidden': True}),
-            'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'min vid', 'required': False}),
-            'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'max vid', 'required': False}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description', 'required': False}),
-            'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'author', 'required': False}),
-
-        }
-
-
+        
 
     def save(self, commit=True):
         instance = super().save(commit=False)
