@@ -141,6 +141,7 @@ def update_d(request):
             print(instance)
             form = datasetForm2(instance=instance)
             videos = instance.videos.all()
+            print(form)
             print(videos)
             return render(request, 'update_dataset2.html',context={'form': form,'videos': videos})
         elif 'delete' in request.POST:
@@ -154,12 +155,14 @@ def update_d(request):
 #update the dataset
 @login_required
 def update(request):
+    
     if request.method == 'POST':
         print('§§§§§§§§§§§§§§§§§§§§§§§§§§§§')
         form2 = datasetForm2(request.POST)
+        
         item_id=request.POST.get('id')
         instance=datasetModel.objects.get(id=item_id)
-        if 'update_dataset' in request.POST and form2.is_valid():
+        if 'update_dataset' in request.POST and form2.is_valid() :
             
             print(item_id)
             name=form2.cleaned_data['name']
@@ -170,6 +173,8 @@ def update(request):
             author=form2.cleaned_data['author']
             desired_num=form2.cleaned_data['desired_num']
             folder=form2.cleaned_data['folder']
+            videoformat=form2.cleaned_data['videoformat']
+            resolution=form2.cleaned_data['resolution']
             #don't forget errors
            
             
@@ -181,8 +186,15 @@ def update(request):
             instance.author = author
             instance.desired_num = desired_num
             instance.folder=folder 
+            instance.videoformat=videoformat
+            instance.resolution=resolution
+            videos=instance.videos.all()
+            for vid in videos:
+                vid.videoformat=videoformat
+                vid.resolution=resolution 
+                vid.folder=folder
+                vid.save() 
             instance.save()
-                
             data = datasetModel.objects.all()
             return render(request, 'update_dataset.html', {'data': data})
         elif 'delete_video' in request.POST:

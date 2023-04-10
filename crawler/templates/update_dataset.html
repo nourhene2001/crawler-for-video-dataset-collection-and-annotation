@@ -5,9 +5,11 @@
 {% block content %}
 <script src="{% static 'js/script.js' %}"></script>
 
-<h1>update dataset</h1>
-<p>click on the field you want to update</p>
+<h1>Overview of the datasets</h1>
 
+<br>
+
+<br>
 <table class="table table-bordered">
   <tr>
       <th class='cur'>ID</th>
@@ -17,7 +19,7 @@
       <th class='cur'>max video</th>
       <th class='cur'>video number</th>
       <th class='cur'>creation data</th>
-      <th>status</th>
+      <th class="cur">status</th>
       <th class='cur'>action</th>
     </tr>
     
@@ -33,7 +35,8 @@
             <td >{{ item.max_v }}</td>
             <td>{{item.num_video}}</td>
             <td>{{item.creation_date}}</td>
-            <td>{{item.status}}</td>
+            <td {% if item.status == "in progress" %} style="background-color: orange;"{% elif item.status == "completed" %} style="background-color: green;"{% endif %}>{{ item.status }}</td>
+    
             <td>
               <form method="post" action="{% url 'update_d' %}">
                 {% csrf_token %}

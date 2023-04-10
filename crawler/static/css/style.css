@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,900&display=swap');
 ul {
     list-style-type: none;
    
 }
+h1{
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 3.5rem !important;
+ }
 .search-box {
     position: absolute;
     top: 35%;
@@ -179,6 +184,7 @@ ul{
 .content {
   margin-left: 300px;
   padding: 20px;
+  
 }
 .row{
   display: flex;
@@ -263,6 +269,8 @@ th:hover{
   display: none;
 }
 #content {
+  
+  
   transition: margin-left 0.5s ease-in-out; /* transition on margin-left property */
 }
 #content.collapsed {

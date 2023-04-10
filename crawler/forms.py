@@ -67,6 +67,7 @@ class datasetForm1(forms.ModelForm):
             'max_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'maximum number of videos', 'required': False}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'description..', 'required': True}),
             'folder':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'where your videos will be stored.. ', 'required': True}),
+           
         }
 
 
@@ -85,7 +86,7 @@ class datasetForm2(forms.ModelForm):
     
     class Meta:
         model = datasetModel
-        fields = ("name","description","id", "min_v","max_v","description","desired_num","status","author","folder")
+        fields = ("name","description","id", "min_v","max_v","description","desired_num","status","author","folder","videoformat","resolution")
         labels = {
             'min_v': 'minimum number of videos',
             'max_v': 'maximum number of videos',
@@ -96,7 +97,11 @@ class datasetForm2(forms.ModelForm):
 
         }
         
-
+        widgets = {
+            'videoformat': forms.Select(choices=dataModel.OPTIONS1,attrs={'required': True}),
+            'resolution': forms.Select(choices=dataModel.OPTIONS2,attrs={'required': True}),
+            
+        }
     def save(self, commit=True):
         instance = super().save(commit=False)
         

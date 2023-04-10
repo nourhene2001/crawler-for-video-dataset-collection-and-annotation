@@ -37,6 +37,10 @@ class datasetModel(models.Model):
     status = models.CharField(max_length=20, choices=OPTIONS,default="in progress")
     desired_num=models.IntegerField(default=0)
     author=models.CharField(max_length=1000,blank=True)
+    OPTIONS1=[('mp4',"mp4"),('WebM',"WebM"),('3GP',"3GP")]
+    OPTIONS2=[('720p',"720p"),('480p',"480p"),('360p',"360p")]
+    videoformat = models.CharField(max_length=20, choices=OPTIONS1,default="mp4")
+    resolution = models.CharField(max_length=20, choices=OPTIONS2,default="720p")
     def __iter__(self):
         return iter(self.data)
 
