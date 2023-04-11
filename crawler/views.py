@@ -1,4 +1,5 @@
 
+from itertools import count
 from multiprocessing import Process
 from zipfile import ZipFile
 import django
@@ -6,6 +7,7 @@ import json
 
 from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
+import pytz
 
 from crawler.tasks import download_videos
 
@@ -144,7 +146,7 @@ def update_d(request):
             print(instance)
             form = datasetForm2(instance=instance)
             videos = instance.videos.all()
-            print(form)
+            
             print(videos)
             return render(request, 'update_dataset2.html',context={'form': form,'videos': videos})
         elif 'delete' in request.POST:
@@ -207,6 +209,8 @@ def update(request):
             selected_data=instance.videos.filter(id__in=selected_elements)
             print(selected_data)
             selected_data.delete()
+            instance.num_video=instance.num_video-len(selected_elements)
+            instance.save()
             form = datasetForm2(instance=instance)
             videos = instance.videos.all()
             print(videos)
@@ -239,14 +243,20 @@ def update(request):
             eta_time = datetime.combine(datetime.today(), time_input) 
             print(eta_time)
             # Serialize the instance object
-            instance_json = serializers.serialize('json', [instance])
-            print(instance_json)
+            
+            data_v=instance.videos.all()
+            #print(instance_json)
             # Schedule the task with the calculated ETA
-            download_videos.apply_async((instance_json,), eta=eta_time)
+           
+            #download_videos.apply_async(args=[instance.pk])
+            download_videos.apply_async(args=[instance.pk], eta=eta_time)
+            #download_videos.apply_async(args=[instance_json])
+            
+
             # Display a success message
             print('i think okay')
-            messages.success(request, 'The download task has been scheduled!')
-            return render(request, 'main.html')
+            messages.success(request, 'you have a download task that has been scheduled!')
+            return render(request, 'update_dataset2.html')
             # create a zip file containing all the downloaded videos
             """zip_path = os.path.join(instance.folder, 'videos.zip')
             print(zip_path)
@@ -291,7 +301,7 @@ def choice_d(request):
                 for v in selected_data:
                     v_d = video_dataset.objects.create(dataset=model, videos=v)
                 v_d.save()
-                return render(request, 'main.html')
+                return render(request, 'update_dataset.html')
     return render(request,'result.html')
 """@login_required
 def check(request):

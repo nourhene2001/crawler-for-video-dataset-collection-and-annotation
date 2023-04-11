@@ -1,14 +1,21 @@
+import json
 from zipfile import ZipFile
 from celery import shared_task
+from django import apps
 from django.core import serializers
 
 import pytube
 import os
 
+from crawler.models import datasetModel
+
 @shared_task
-def download_videos(instance):
-    # Deserialize the instance object
-    instance = serializers.deserialize('json', instance, ignorenonexistent=True).next().object
+def download_videos(pk):
+    
+    
+
+    
+    instance=datasetModel.objects.get(pk=pk)
     print('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM')
     videos = instance.videos.all()
     downloaded_videos = []

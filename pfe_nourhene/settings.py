@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'pfe_nourhene\crawler-380708-9c18c4f94643.json'
-
+CELERY_TIMEZONE = 'Africa/Tunis'
 CELERY_BROKER_URL ='amqp://guest:guest@localhost:5672/'
 # Application definition
 
