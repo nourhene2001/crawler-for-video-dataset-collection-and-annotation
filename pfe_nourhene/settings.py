@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import datetime
 import os
 from pathlib import Path
 import sys
+
+import pytz
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,7 +33,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'pfe_nourhene\crawler-380708-9c18c4f94643.json'
-CELERY_TIMEZONE = 'Africa/Tunis'
+CELERY_TIMEZONE = 'UTC'
+
+
 CELERY_BROKER_URL ='amqp://guest:guest@localhost:5672/'
 # Application definition
 

@@ -239,18 +239,15 @@ def update(request):
             time_input = request.POST.get('time')
             # Convert the time input to a datetime object with today's date
             time_input = datetime.strptime(time_input, '%H:%M').time()
-
+            print(datetime.now)
             eta_time = datetime.combine(datetime.today(), time_input) 
             print(eta_time)
-            # Serialize the instance object
             
-            data_v=instance.videos.all()
-            #print(instance_json)
             # Schedule the task with the calculated ETA
            
             #download_videos.apply_async(args=[instance.pk])
             download_videos.apply_async(args=[instance.pk], eta=eta_time)
-            #download_videos.apply_async(args=[instance_json])
+          
             
 
             # Display a success message
