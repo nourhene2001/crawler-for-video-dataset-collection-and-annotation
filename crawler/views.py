@@ -7,6 +7,8 @@ import json
 from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
 
+from crawler.tasks import download_videos
+
 django.setup()
 import os
 from django import apps
@@ -22,12 +24,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistrationForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 import pytube
 import schedule
 import time
+from django.core import serializers
 
 def run_spider(query,max_items,duration):
     process = CrawlerProcess(get_project_settings())
@@ -228,34 +231,22 @@ def update(request):
                     print(video_path)
                     downloaded_videos.append(video_path)
         elif 'wait' in request.POST:
-            time_sch = request.POST.get('time')
-            # Parse the time string to get hour and minute
-            hour, minute = map(int, time_sch.split(":"))
-            # Get the current time and calculate the number of seconds until the specified time
-            current_time = time.localtime()
-            seconds_until_scheduled_time = (hour - current_time.tm_hour) * 3600 + (minute - current_time.tm_min) * 60
-            # Wait until the scheduled time
-            time.sleep(seconds_until_scheduled_time)
-            # Execute the download task
-            videos = instance.videos.all()
-            downloaded_videos = []
-            for video in videos:
-                yt = pytube.YouTube(video.url)
+            # Get the time input from the form
+            time_input = request.POST.get('time')
+            # Convert the time input to a datetime object with today's date
+            time_input = datetime.strptime(time_input, '%H:%M').time()
 
-                stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
-                if stream is not None:
-                    print("!!!!!!!!!!!!")
-                    print(stream)
-                    video_path = stream.download(output_path=instance.folder)
-                    print(video_path)
-                    downloaded_videos.append(video_path)
-                else:
-                    print("???????")
-                    stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
-                    video_path = stream.download(output_path=instance.folder)
-                    print(video_path)
-                    downloaded_videos.append(video_path)
-
+            eta_time = datetime.combine(datetime.today(), time_input) 
+            print(eta_time)
+            # Serialize the instance object
+            instance_json = serializers.serialize('json', [instance])
+            print(instance_json)
+            # Schedule the task with the calculated ETA
+            download_videos.apply_async((instance_json,), eta=eta_time)
+            # Display a success message
+            print('i think okay')
+            messages.success(request, 'The download task has been scheduled!')
+            return render(request, 'main.html')
             # create a zip file containing all the downloaded videos
             """zip_path = os.path.join(instance.folder, 'videos.zip')
             print(zip_path)
@@ -270,7 +261,7 @@ def update(request):
                 response = HttpResponse(f.read(), content_type='application/zip')
                 response['Content-Disposition'] = 'attachment; filename=videos.zip'
                 return response"""
-        data = datasetModel.objects.all()
+    data = datasetModel.objects.all()
     return render(request, 'update_dataset.html', {'data': data})
 
 #after result page choose
