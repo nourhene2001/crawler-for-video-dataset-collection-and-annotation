@@ -20,7 +20,7 @@ class YoutubeSpider(scrapy.Spider):
          
     #start_url should be result of that query
     def start_requests(self):
-        youtube=build('youtube', 'v3', developerKey=os.environ.get('AIzaSyCt4dh_uoZ7rncyiftsOl4rmhksZ4w8eJ4'))
+        youtube=build('youtube', 'v3', developerKey=os.environ.get('AIzaSyAcqH635cbFPKvQX_66XaMtGxENrGKggeo'))
         
         search_response = youtube.search().list(
         q=self.query,
@@ -29,8 +29,9 @@ class YoutubeSpider(scrapy.Spider):
         part='id,snippet',
         videoDuration=self.duration,
         #to be changed later !!!!!!!!!!!!!!!!!
-        maxResults=self.max_items
+        maxResults=min(self.max_items, 50),
         ).execute()
+        self.next_page_token = search_response.get('nextPageToken')
         video_ids = []
         for search_result in search_response.get('items', []):
                 video_ids.append(search_result['id']['videoId'])
@@ -38,8 +39,23 @@ class YoutubeSpider(scrapy.Spider):
         for video_id in video_ids:
             video_url = f'https://www.youtube.com/watch?v={video_id}'
             yield scrapy.Request(video_url, callback=self.parse_video)
-        # Make a request to a URL and execute the parse method when the response is received
-        #specify the URL to request, the callback function to be executed when the response is received
+        # Make additional requests if there are more results
+        while self.next_page_token and len(video_ids) < self.max_items:
+            search_request = youtube.search().list(
+                q=self.query,
+                type='video',
+                part='id,snippet',
+                videoDuration=self.duration,
+                maxResults=min(self.max_items - len(video_ids), 50),
+                pageToken=self.next_page_token,
+            )
+            search_response = search_request.execute()
+            self.next_page_token = search_response.get('nextPageToken')
+            video_ids.extend([search_result['id']['videoId'] for search_result in search_response.get('items', [])])
+
+            for video_id in video_ids:
+                video_url = f'https://www.youtube.com/watch?v={video_id}'
+                yield scrapy.Request(video_url, callback=self.parse_video)
         
     #scrape additional info with pytube and download the video
     def parse_video(self, response):
@@ -61,8 +77,7 @@ class YoutubeSpider(scrapy.Spider):
             items['duration']=duration
             items['description']=description
             items['url']=video_url
-            
-                #stream = yt.streams.get_highest_resolution()
+            #stream = yt.streams.get_highest_resolution()
                 #stream=yt.streams.filter(file_extension='self.video_format')
             # Download the video
                 #stream.download()
@@ -75,5 +90,4 @@ class YoutubeSpider(scrapy.Spider):
         #stream.download()
         yield items
         
-
 

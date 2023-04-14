@@ -16,6 +16,9 @@ from pathlib import Path
 import sys
 
 import pytz
+from datetime import timedelta
+from pytz import timezone
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,7 +36,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'pfe_nourhene\crawler-380708-9c18c4f94643.json'
-CELERY_TIMEZONE = 'UTC'
+
+CELERY_TASK_ACKNOWLEDGEMENTS = True
+CELERY_TASK_ACKNOWLEDGE_LATE = True
+CELERY_TASK_ACKNOWLEDGE_RETRY = True
+CELERY_WORKER_DIRECT = True
+CELERY_WORKER_CONCURRENCY = 4
+CELERY_BROKER_TRANSPORT_OPTIONS = {'confirm_publish': True,
+                                   'delivery_confirmation_timeout': 300}
 
 
 CELERY_BROKER_URL ='amqp://guest:guest@localhost:5672/'

@@ -9,10 +9,11 @@ from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
 import pytz
 
-from crawler.tasks import download_videos
+
 
 django.setup()
 import os
+from crawler.tasks import download_videos
 from django import apps
 from django.shortcuts import redirect, render
 from scrapy import Spider
@@ -120,12 +121,16 @@ def create_d(request):
             min_v=form_create.cleaned_data['min_v']
             max_v=form_create.cleaned_data['max_v']
             description=form_create.cleaned_data['description']
+            folder=form_create.cleaned_data['folder']
+            desired_num=form_create.cleaned_data['desired_num']
             new_obj = datasetModel.objects.create(
                             name=name,
                             creation_date=datetime.now(),
                             min_v=min_v,
                             max_v=max_v,
-                            description=description
+                            description=description,
+                            folder=folder,
+                            desired_num=desired_num
                         )
             new_obj.save()
     form_create=datasetForm1()
@@ -215,45 +220,114 @@ def update(request):
             videos = instance.videos.all()
             print(videos)
             return render(request, 'update_dataset2.html',context={'form': form,'videos': videos})
-        elif 'download' in request.POST:
-            videos = instance.videos.all()
-            downloaded_videos = []
-            for video in videos:
-                yt = pytube.YouTube(video.url)
-                
-                stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
-                if stream is not None:
-                    print("!!!!!!!!!!!!")
-                    print(stream)
-                    video_path = stream.download(output_path=instance.folder)
-                    print(video_path)
-                    downloaded_videos.append(video_path)
+        elif 'download' in request.POST :
+            if form2.is_valid() :
+            
+                print(item_id)
+                name=form2.cleaned_data['name']
+                min_v=form2.cleaned_data['min_v']
+                max_v=form2.cleaned_data['max_v']
+                description=form2.cleaned_data['description']
+                status=form2.cleaned_data['status']
+                author=form2.cleaned_data['author']
+                desired_num=form2.cleaned_data['desired_num']
+                folder=form2.cleaned_data['folder']
+                videoformat=form2.cleaned_data['videoformat']
+                resolution=form2.cleaned_data['resolution']
+                instance.name = name
+                instance.min_v = min_v
+                instance.max_v = max_v
+                instance.description = description
+                instance.status = status
+                instance.author = author
+                instance.desired_num = desired_num
+                instance.folder=folder 
+                instance.videoformat=videoformat
+                instance.resolution=resolution
+                videos=instance.videos.all()
+                for vid in videos:
+                    vid.videoformat=videoformat
+                    vid.resolution=resolution 
+                    vid.folder=folder
+                    vid.save() 
+                instance.save()
+                if instance.status=='completed' or instance.desired_num==instance.num_video:
+                    videos = instance.videos.all()
+                    downloaded_videos = []
+                    for video in videos:
+                        yt = pytube.YouTube(video.url)
+                        
+                        stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
+                        if stream is not None:
+                            print("!!!!!!!!!!!!")
+                            print(stream)
+                            video_path = stream.download(output_path=instance.folder)
+                            print(video_path)
+                            downloaded_videos.append(video_path)
+                        else:
+                            print("???????")
+                            stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
+                            video_path = stream.download(output_path=instance.folder)
+                            print(video_path)
+                            downloaded_videos.append(video_path)
                 else:
-                    print("???????")
-                    stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
-                    video_path = stream.download(output_path=instance.folder)
-                    print(video_path)
-                    downloaded_videos.append(video_path)
+                    messages.error(request, 'the dataset is not  completed !')
+                    return render(request, 'update_dataset2.html')
         elif 'wait' in request.POST:
-            # Get the time input from the form
-            time_input = request.POST.get('time')
-            # Convert the time input to a datetime object with today's date
-            time_input = datetime.strptime(time_input, '%H:%M').time()
-            print(datetime.now)
-            eta_time = datetime.combine(datetime.today(), time_input) 
-            print(eta_time)
+            if form2.is_valid() :
             
-            # Schedule the task with the calculated ETA
-           
-            #download_videos.apply_async(args=[instance.pk])
-            download_videos.apply_async(args=[instance.pk], eta=eta_time)
-          
-            
+                print(item_id)
+                name=form2.cleaned_data['name']
+                min_v=form2.cleaned_data['min_v']
+                max_v=form2.cleaned_data['max_v']
+                description=form2.cleaned_data['description']
+                status=form2.cleaned_data['status']
+                author=form2.cleaned_data['author']
+                desired_num=form2.cleaned_data['desired_num']
+                folder=form2.cleaned_data['folder']
+                videoformat=form2.cleaned_data['videoformat']
+                resolution=form2.cleaned_data['resolution']
+                instance.name = name
+                instance.min_v = min_v
+                instance.max_v = max_v
+                instance.description = description
+                instance.status = status
+                instance.author = author
+                instance.desired_num = desired_num
+                instance.folder=folder 
+                instance.videoformat=videoformat
+                instance.resolution=resolution
+                videos=instance.videos.all()
+                for vid in videos:
+                    vid.videoformat=videoformat
+                    vid.resolution=resolution 
+                    vid.folder=folder
+                    vid.save() 
+                instance.save()
+                if instance.status=='completed' or instance.desired_num==instance.num_video:
+                    # Get the time input from the form
+                    time_input = request.POST.get('time')
+                    # Convert the time input to a datetime object with today's date
+                    time_input = datetime.strptime(time_input, '%H:%M').time()
+                    
+                    eta_time = datetime.combine(datetime.today(), time_input) 
+                    print(eta_time)
+                    
+                    # Schedule the task with the calculated ETA
+                    print(instance.pk)
+                    #download_videos.apply_async(args=[instance.pk])
+                    download_videos.apply_async(args=[instance.pk], eta=eta_time)
 
-            # Display a success message
-            print('i think okay')
-            messages.success(request, 'you have a download task that has been scheduled!')
-            return render(request, 'update_dataset2.html')
+            
+                    
+                    # Display a success message
+                    print('i think okay')
+                    messages.success(request, 'you have a download task that has been scheduled!')
+                    data = datasetModel.objects.all()
+                    return render(request, 'update_dataset.html', {'data': data})
+                else: 
+                    messages.error(request, 'the dataset is not  completed !')
+                    return render(request, 'update_dataset2.html')
             # create a zip file containing all the downloaded videos
             """zip_path = os.path.join(instance.folder, 'videos.zip')
             print(zip_path)
@@ -293,12 +367,19 @@ def choice_d(request):
             if form2.is_valid():
                 name=form2.cleaned_data.get('form3_name')
                 model=datasetModel.objects.get(name=name)
-                model.num_video += selected_data.count()
-                model.save()
-                for v in selected_data:
-                    v_d = video_dataset.objects.create(dataset=model, videos=v)
-                v_d.save()
-                return render(request, 'update_dataset.html')
+                if int(model.max_v) > selected_data.count()+int(model.num_video) and int(model.min_v) < selected_data.count()+int(model.num_video) and int(model.desired_num) > selected_data.count()+int(model.num_video):
+                    model.num_video += selected_data.count()
+                    model.save()
+                    
+                    for v in selected_data:
+                        v_d = video_dataset.objects.create(dataset=model, videos=v)
+                    v_d.save()
+                    data = datasetModel.objects.all()
+                    return render(request, 'update_dataset.html', {'data': data})      
+                else:
+                    messages.error(request, 'the number of videos  is more than the dataset limit!')
+
+                    
     return render(request,'result.html')
 """@login_required
 def check(request):
@@ -381,9 +462,8 @@ def login(request):
 #logout view
 def logout(request):
     auth_logout(request)
-    return redirect('welcome')
-def welcome(request):
-    return render(request,'welcome.html')
+    return redirect('login')
+
 def delete_vid(request):
     return render(request,'update_dataset2.html')
                 
