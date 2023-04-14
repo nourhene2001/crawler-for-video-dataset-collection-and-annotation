@@ -37,15 +37,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'pfe_nourhene\crawler-380708-9c18c4f94643.json'
 
-CELERY_TASK_ACKNOWLEDGEMENTS = True
-CELERY_TASK_ACKNOWLEDGE_LATE = True
-CELERY_TASK_ACKNOWLEDGE_RETRY = True
-CELERY_WORKER_DIRECT = True
-CELERY_WORKER_CONCURRENCY = 4
-CELERY_BROKER_TRANSPORT_OPTIONS = {'confirm_publish': True,
-                                   'delivery_confirmation_timeout': 300}
+BROKER_CONNECTION_TIMEOUT = 3600
 
 
+CELERY_TIMEZONE='Africa/Tunis'
 CELERY_BROKER_URL ='amqp://guest:guest@localhost:5672/'
 # Application definition
 
@@ -131,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Tunis'
 
 USE_I18N = True
 

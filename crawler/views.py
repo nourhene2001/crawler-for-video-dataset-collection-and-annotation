@@ -370,15 +370,22 @@ def choice_d(request):
                 if int(model.max_v) > selected_data.count()+int(model.num_video) and int(model.min_v) < selected_data.count()+int(model.num_video) and int(model.desired_num) > selected_data.count()+int(model.num_video):
                     model.num_video += selected_data.count()
                     model.save()
-                    
                     for v in selected_data:
                         v_d = video_dataset.objects.create(dataset=model, videos=v)
                     v_d.save()
                     data = datasetModel.objects.all()
                     return render(request, 'update_dataset.html', {'data': data})      
                 else:
+                    data=selected_data
                     messages.error(request, 'the number of videos  is more than the dataset limit!')
-
+                    form1=dataForm()
+                    form3=datasetForm3()
+                    return render(request, 'result.html', {'data': data ,'form1':form1,'form3':form3})
+        else:
+            data=selected_data
+            form1=dataForm()
+            form3=datasetForm3()
+            return render(request, 'result.html', {'data': data ,'form1':form1,'form3':form3})
                     
     return render(request,'result.html')
 """@login_required
