@@ -300,3 +300,31 @@ margin:10px;
   margin-right: 10px;
   
 }
+.card {
+  box-sizing: border-box;
+  width: 500px;
+  height: 60px;
+  background: rgba(229, 230, 249, 0.58);
+  border: 1px solid white;
+  box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(3px);
+  border-radius: 17px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.5s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-weight: bolder;
+  color: black;
+}
+
+.card:hover {
+  border: 1px solid black;
+  transform: scale(1.05);
+}
+
+.card:active {
+  transform: scale(0.95) rotateZ(1.7deg);
+}

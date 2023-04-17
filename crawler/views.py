@@ -310,7 +310,7 @@ def update(request):
                     # Convert the time input to a datetime object with today's date
                     time_input = datetime.strptime(time_input, '%H:%M').time()
                     
-                    eta_time = datetime.combine(datetime.today(), time_input) 
+                    eta_time = datetime.combine(datetime.today(), time_input) - timedelta(hours=1)
                     print(eta_time)
                     
                     # Schedule the task with the calculated ETA

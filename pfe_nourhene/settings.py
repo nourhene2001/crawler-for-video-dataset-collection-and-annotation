@@ -43,6 +43,7 @@ BROKER_CONNECTION_TIMEOUT = 3600
 CELERY_TIMEZONE='Africa/Tunis'
 CELERY_BROKER_URL ='amqp://guest:guest@localhost:5672/'
 # Application definition
+CELERY_BROKER_TRANSPORT_OPTIONS = {'consumer_timeout': 31622400000}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -125,6 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+
 
 TIME_ZONE = 'Africa/Tunis'
 

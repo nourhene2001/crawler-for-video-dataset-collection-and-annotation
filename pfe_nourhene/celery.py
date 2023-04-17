@@ -6,6 +6,11 @@ from celery import Celery
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pfe_nourhene.settings')
 
 app = Celery('pfe_nourhene')
+app.conf.broker_connection_timeout = 30
+app.conf.broker_connection_retry = True
+app.conf.broker_connection_max_retries = 3
+app.conf.task_acks_late = True
+app.conf.worker_prefetch_multiplier = 1
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
