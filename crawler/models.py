@@ -18,7 +18,7 @@ class dataModel(models.Model):
     videoformat = models.CharField(max_length=20, choices=OPTIONS1,default="mp4")
     resolution = models.CharField(max_length=20, choices=OPTIONS2,default="720p")
     folder = models.CharField(max_length=255, blank=True)  # new field for folder path
-
+    annotations_json=models.JSONField(blank=True,null=True)
     def __iter__(self):
         return iter(self.data)
 
@@ -41,6 +41,7 @@ class datasetModel(models.Model):
     OPTIONS2=[('720p',"720p"),('480p',"480p"),('360p',"360p")]
     videoformat = models.CharField(max_length=20, choices=OPTIONS1,default="mp4")
     resolution = models.CharField(max_length=20, choices=OPTIONS2,default="720p")
+    annotation=models.CharField(max_length=255, blank=True)
     def __iter__(self):
         return iter(self.data)
 
