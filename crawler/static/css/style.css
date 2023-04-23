@@ -3,9 +3,14 @@ ul {
     list-style-type: none;
    
 }
+body{
+  
+  background-color: #444950 !important;
+}
 h1{
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 3.5rem !important;
+  color: rgb(46, 46, 46);
  }
 .search-box {
     position: absolute;
@@ -154,7 +159,9 @@ font-size:medium;
     padding-top :100px;
     cursor:pointer;
     
-  
+    background-color: rgba(128, 128, 128, 0.1);
+
+
     font-weight: 500;
     transition: width 0.3s ease-in-out;
   }
@@ -183,8 +190,17 @@ ul{
 }
 .content {
   margin-left: 300px;
+  margin-right: 35px;
   padding: 20px;
-  
+  margin-top: 35px;
+ 
+}
+.bor{
+  padding: 20px;
+  border-radius: 22px;
+  background-color: rgba(212, 212, 212, 0.9);
+  height: 100vh;
+  overflow-y:scroll;
 }
 .row{
   display: flex;
@@ -200,15 +216,17 @@ ul{
 
 
 svg{
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   margin-top: 20px;
   position: fixed;
   cursor:pointer;
 }
 svg:hover{
   background-color: #727e8b;
-  border-radius:10px;
+  border-radius:50px;
+  padding: 5px;
+  border: 5px;
   
 }
 .p-3 {
@@ -234,12 +252,19 @@ svg:hover{
 table {
   border-collapse: collapse;
   border-color: #576c84;
+  cursor: pointer;
+  background-color: #ccc;
+}
+table:hover{
+  
 }
 td{
   padding:2px !important;
 }
 .cur{
   cursor: pointer;
+  background-color: #555;
+
 }
 tr{
   resize: horizontal; /* allow vertical resizing */
@@ -328,3 +353,82 @@ margin:10px;
 .card:active {
   transform: scale(0.95) rotateZ(1.7deg);
 }
+
+ 
+ 
+ 
+    
+    /* Style the scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* width of the scrollbar */
+}
+
+/* Style the scrollbar track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* color of the scrollbar track */
+}
+
+/* Style the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background: #888; /* color of the scrollbar thumb */
+  border-radius: 5px; /* rounded corners of the scrollbar thumb */
+}
+
+/* Style the scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* color of the scrollbar thumb on hover */
+}
+
+.tr_style{
+  background-color: #555 !important;
+
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  color: #333;
+  font-size: 16px;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #eee;
+}
+
+tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
+td:first-child {
+  border-left: none;
+}
+
+td:last-child {
+  border-right: none;
+}
+
+thead {
+  border-bottom: 2px solid #ddd;
+}
+
+tbody {
+  border-bottom: 1px solid #ddd;
+}
+
+td img {
+  display: block;
+  margin: 0 auto;
+  max-height: 150px;
+  max-width: 150px;
+}
+

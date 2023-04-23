@@ -18,10 +18,11 @@
 <h1>Overview of the datasets</h1>
 
 <br>
-
+<hr>
 <br>
-<table class="table table-bordered">
-  <tr>
+
+<table class=" table table-bordered">
+  <tr class="tr_style">
       <th class='cur'>ID</th>
       <th class='cur'>Name</th>
       <th class='cur'>description</th>
@@ -47,12 +48,14 @@
             <td>{{item.creation_date}}</td>
             <td {% if item.status == "in progress" %} style="background-color: orange;"{% elif item.status == "completed" %} style="background-color: green;"{% endif %}>{{ item.status }}</td>
     
-            <td>
+            <td >
               <form method="post" action="{% url 'update_d' %}">
                 {% csrf_token %}
                 <input type="hidden" name="item_id_{{ item.id }}" value="{{ item.id }}">
+                <div style="display: flex;padding: 5px;" >
               <button type="submit" name="delete" id="delete" >DELETE </button>
               <button type="submit" name="update" id="update" >UPDATE</button>
+              </div>
               </form>
             </td>
             

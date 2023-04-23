@@ -47,6 +47,8 @@ while(cap.isOpened()):
                 
                 cvzone.putTextRect(frame,f'{name} {conf}',(max(35,x1),max(35,y1)),scale=1,thickness=1)
                 c.append(name)
+                #cv2.imshow('frame',frame)
+
         # Exit the loop if the 'q' key is pressed or if the video ends
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -75,7 +77,7 @@ def annotation (folder):
     #get all videos in dataset
     dataset_folder = os.listdir(folder)
     for video in dataset_folder:
-        cap = cv2.VideoCapture(dataset_folder+video)
+        cap = cv2.VideoCapture(dataset_folder+'/'+video)
 
     
 
