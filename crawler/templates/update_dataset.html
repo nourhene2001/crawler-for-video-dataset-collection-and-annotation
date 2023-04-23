@@ -20,7 +20,7 @@
 <br>
 <hr>
 <br>
-
+<div class="table-container">
 <table class=" table table-bordered">
   <tr class="tr_style">
       <th class='cur'>ID</th>
@@ -46,7 +46,7 @@
             <td >{{ item.max_v }}</td>
             <td>{{item.num_video}}</td>
             <td>{{item.creation_date}}</td>
-            <td {% if item.status == "in progress" %} style="background-color: orange;"{% elif item.status == "completed" %} style="background-color: green;"{% endif %}>{{ item.status }}</td>
+            <td {% if item.status == "in progress" %} style="background-color: #d35400;"{% elif item.status == "completed" %} style="background-color: #63cda8;"{% endif %}>{{ item.status }}</td>
     
             <td >
               <form method="post" action="{% url 'update_d' %}">
@@ -64,7 +64,7 @@
     {% endfor %}
 
 </table>
-
+</div>
   
     
 {% endblock %}

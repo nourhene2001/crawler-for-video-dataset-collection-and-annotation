@@ -4,11 +4,15 @@
 
 {% block content %}
 <h1>create dataset</h1>
+<div class="form-container">
     <form method="POST" action="{% url 'create_d' %}" >
+        
         {% csrf_token %}
         {{ form_create.as_p }}
         
 
         <button name="m1" id="m1" type="submit">Submit</button>
+        
     </form>
+</div>
 {% endblock %}

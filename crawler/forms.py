@@ -16,7 +16,9 @@ class QForm(forms.Form):
     max_items = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': 'MAX ITEMS'}))
     OPTIONS = ['any','short','medium','long']
     duration = forms.ChoiceField(choices=[(choice, choice) for choice in OPTIONS])
-   
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
     #min_duration=forms.CharField()
     #max_duration=forms.CharField()
 
@@ -29,6 +31,9 @@ class dataForm(forms.ModelForm):
             'resolution': forms.Select(choices=dataModel.OPTIONS2,attrs={'required': True}),
             
         }
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.label_suffix = ''
 
 
 
@@ -53,14 +58,7 @@ class datasetForm1(forms.ModelForm):
     class Meta:
         model = datasetModel
         fields = ("name", "min_v","max_v","description","folder","author","desired_num")
-        labels = {
-            
-            'min_v': 'minimum number of videos',
-            'max_v': 'maximum number of videos',
-            'desired_num': 'desired number of videos',
-            'folder':'folder path',
-
-        }
+        
         widgets = {
             
             'min_v': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'minimum number of videos', 'required': False}),
@@ -69,7 +67,9 @@ class datasetForm1(forms.ModelForm):
             'folder':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'where your videos will be stored.. ', 'required': True}),
            
         }
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
 
     """def save(self, commit=True):
         instance = super().save(commit=False)
@@ -102,6 +102,9 @@ class datasetForm2(forms.ModelForm):
             'resolution': forms.Select(choices=dataModel.OPTIONS2,attrs={'required': True}),
             
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
     def save(self, commit=True):
         instance = super().save(commit=False)
         
@@ -122,6 +125,7 @@ class datasetForm3(forms.ModelForm):
         name_choices = datasetModel.objects.values_list('name', flat=True)
         choices = [('', '---')] +[(m, m) for m in name_choices]
         self.fields['form3_name'].choices = choices
+        self.label_suffix = ''
 
     def save(self, commit=True):
         instance = super().save(commit=False)

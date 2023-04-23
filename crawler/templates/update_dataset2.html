@@ -25,7 +25,9 @@
     {% endif %}
 
 <hr>
+
 <form method="post" action="{% url 'update' %}">
+  <div class="form-container">
     {% csrf_token %}
     {{ form.as_p }}
     
@@ -35,6 +37,7 @@
  <button type="submit" id="download" name="download"> update and start downloading</button>
 <button type="button" class="st" id="schedule" name="schedule" >update and schedule downloading</button>
 </div>
+  </div>
 <hr>
 <h1>Video settings</h1>
 

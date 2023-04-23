@@ -137,4 +137,4 @@ def annotation (folder):
       # Write results to a JSON file
         with open('results.json', 'w') as f:
             json.dump(results, f)
-    return my_dict
+    return my_dict,'results.json'
