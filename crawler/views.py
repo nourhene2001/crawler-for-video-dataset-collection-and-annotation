@@ -9,6 +9,8 @@ from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
 import pytz
 
+from crawler.annotation import annotation
+
 
 
 django.setup()
@@ -264,12 +266,20 @@ def update(request):
                             video_path = stream.download(output_path=instance.folder)
                             print(video_path)
                             downloaded_videos.append(video_path)
+                            dic,json=annotation.annotation(folder)
+                            instance.annotations_json(json)
+                            videos=instance.videos.all()
+                            instance.save()
+
                         else:
                             print("???????")
                             stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
                             video_path = stream.download(output_path=instance.folder)
                             print(video_path)
                             downloaded_videos.append(video_path)
+                            dic,json=annotation.annotation(folder)
+                            instance.annotations_json(json)
+                            instance.save()
                 else:
                     messages.error(request, 'the dataset is not  completed !')
                     return render(request, 'update_dataset2.html')
