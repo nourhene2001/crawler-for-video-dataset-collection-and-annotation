@@ -266,7 +266,7 @@ def update(request):
                             video_path = stream.download(output_path=instance.folder)
                             print(video_path)
                             downloaded_videos.append(video_path)
-                            dic,json=annotation.annotation(folder)
+                            json=annotation(instance.folder)
                             instance.annotations_json(json)
                             videos=instance.videos.all()
                             instance.save()
@@ -277,7 +277,7 @@ def update(request):
                             video_path = stream.download(output_path=instance.folder)
                             print(video_path)
                             downloaded_videos.append(video_path)
-                            dic,json=annotation.annotation(folder)
+                            json=annotation(instance.folder)
                             instance.annotations_json(json)
                             instance.save()
                 else:
