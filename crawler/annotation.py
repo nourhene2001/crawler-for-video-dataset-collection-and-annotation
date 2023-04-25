@@ -81,20 +81,23 @@ def annotation(folder):
    
 
     # Get all videos in dataset
-    dataset_folder = os.listdir(folder)
+    dataset_folder = os.listdir(folder+"\\before")
+    output_folder = folder+"\\after"
+    os.makedirs(output_folder)
     for video in dataset_folder:
         print(video)
-        cap = cv2.VideoCapture(os.path.join(folder, video))
+        cap = cv2.VideoCapture(os.path.join(folder+"\\before", video))
+        
         # Define the codec and create VideoWriter object
-        cap_out = cv2.VideoWriter("output.mp4", cv2.VideoWriter_fourcc(*'mp4v'),cap.get(cv2.CAP_PROP_FPS), (640, 480), isColor=True)
+        output_path = os.path.join(output_folder, video)
+        cap_out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'),cap.get(cv2.CAP_PROP_FPS), (640, 480), isColor=True)
         c = {}
         while(cap.isOpened()):
             # Read a frame from the video file
             ret, frame = cap.read()
-            
+            print(ret)
             # Create VideoWriter object
             
-
             if ret == True:
                 # Perform preprocessing on the frame
                 # For example, you can resize the frame to a fixed size

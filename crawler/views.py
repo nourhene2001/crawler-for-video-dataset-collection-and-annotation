@@ -263,7 +263,8 @@ def update(request):
                         if stream is not None:
                             print("!!!!!!!!!!!!")
                             print(stream)
-                            video_path = stream.download(output_path=instance.folder)
+                            f=instance.folder+"\\before"
+                            video_path = stream.download(output_path=f)
                             print(video_path)
                             downloaded_videos.append(video_path)
                             json_a=annotation(instance.folder)
@@ -275,7 +276,8 @@ def update(request):
                         else:
                             print("???????")
                             stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
-                            video_path = stream.download(output_path=instance.folder)
+                            f=instance.folder+"\\before"
+                            video_path = stream.download(output_path=f)
                             print(video_path)
                             downloaded_videos.append(video_path)
                             json_a=annotation(instance.folder)
