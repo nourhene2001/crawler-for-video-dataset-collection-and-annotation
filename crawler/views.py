@@ -266,9 +266,10 @@ def update(request):
                             video_path = stream.download(output_path=instance.folder)
                             print(video_path)
                             downloaded_videos.append(video_path)
-                            json=annotation(instance.folder)
-                            instance.annotations_json(json)
-                            videos=instance.videos.all()
+                            json_a=annotation(instance.folder)
+
+                            instance.annotations_dic=json_a
+                            
                             instance.save()
 
                         else:
@@ -277,8 +278,8 @@ def update(request):
                             video_path = stream.download(output_path=instance.folder)
                             print(video_path)
                             downloaded_videos.append(video_path)
-                            json=annotation(instance.folder)
-                            instance.annotations_json(json)
+                            json_a=annotation(instance.folder)
+                            instance.annotations_dic=json_a
                             instance.save()
                 else:
                     messages.error(request, 'the dataset is not  completed !')

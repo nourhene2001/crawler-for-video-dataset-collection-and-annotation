@@ -76,18 +76,24 @@ def annotation(folder):
     print(folder)
 
     # Create an empty dictionary to store the results
-    results = {}
+    res = {}
+    
+   
 
     # Get all videos in dataset
     dataset_folder = os.listdir(folder)
     for video in dataset_folder:
         print(video)
         cap = cv2.VideoCapture(os.path.join(folder, video))
-
+        # Define the codec and create VideoWriter object
+        cap_out = cv2.VideoWriter("output.mp4", cv2.VideoWriter_fourcc(*'mp4v'),cap.get(cv2.CAP_PROP_FPS), (640, 480), isColor=True)
         c = {}
         while(cap.isOpened()):
             # Read a frame from the video file
             ret, frame = cap.read()
+            
+            # Create VideoWriter object
+            
 
             if ret == True:
                 # Perform preprocessing on the frame
@@ -95,7 +101,7 @@ def annotation(folder):
                 frame = cv2.resize(frame, (640, 480))
 
                 # Perform YOLO object detection
-                results = model(frame, stream=True)
+                results = model(frame)
                 for r in results:
                     boxes = r.boxes
                     for box in boxes:
@@ -114,22 +120,31 @@ def annotation(folder):
                         x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 3)
                         conf = math.ceil((box.conf[0]*100))/100
-                        cvzone.putTextRect(frame, f'{name} {conf}', (max(35, x1), max(35, y1)), scale=1, thickness=1)
+                        if conf > 0.80:
+                            cvzone.putTextRect(frame, f'{name} {conf}', (max(0, x1), max(35, y1)), scale=1, thickness=1)
+                
+                
 
-                # Exit the loop if the 'q' key is pressed or if the video ends
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
+                
+                print("done to out")
+                cap_out.write(frame)
             else:
                 break
+        else:
+            break        
+               
+            
 
         # Add video name and corresponding dictionary to results
-        results[video] = c
-
+        res[video] = c
+        print(res)
         # Release the video capture object
         cap.release()
-
+        cap_out.release()
     # Write results to a JSON file
-    with open('results.json', 'w') as f:
-        json.dump(results, f)
-
-    return results
+    """with open('results.json', 'w') as f:
+        json.dump(res, f)
+    with open('results.json', 'r') as f:
+        json_data = f.read()"""
+    return res
+    

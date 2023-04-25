@@ -453,8 +453,7 @@ margin:10px;
 .form-container button[type="submit"]:hover, .form-container .st:hover {
   background-color: #727e8b;
 }
-/* table container */
-/* table container */
+
 .table {
   border-collapse: collapse;
   margin-top: 20px;
@@ -512,4 +511,8 @@ margin:10px;
   
   .btn-toggle:focus {
     box-shadow: none;
+  }
+  .table th:hover {
+    background-color: #7589a0;
+    cursor: pointer;
   }
