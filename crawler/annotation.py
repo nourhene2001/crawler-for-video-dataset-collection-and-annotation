@@ -123,7 +123,7 @@ def annotation(folder):
                         x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 3)
                         conf = math.ceil((box.conf[0]*100))/100
-                        if conf > 0.80:
+                        if conf > 0.87:
                             cvzone.putTextRect(frame, f'{name} {conf}', (max(0, x1), max(35, y1)), scale=1, thickness=1)
                 
                 
