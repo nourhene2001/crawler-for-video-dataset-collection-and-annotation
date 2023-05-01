@@ -1,15 +1,26 @@
 import json
 import os
 import cv2
+import numpy as np
 import torch
 import cvzone
 from ultralytics import YOLO
 import math
+import supervision as sv
+
+"""from roboflow import Roboflow
+rf = Roboflow(api_key="vt1WopMNT1DHN0D3Ml56")
+project = rf.workspace("pfe-ihifb").project("football-players-detection-3zvbc")
+dataset = project.version(1).download("yolov8")"""
+
+
+"""from segment_anything import sam_model_registry, SamPredictor
+
+from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
 
 # Load YOLOv8 model
-"""model = YOLO("yolov8m.pt")
-device = model.device
-print(device)
+model = YOLO("yolov8m.pt")
+
 cap = cv2.VideoCapture('crawler\cats.mp4')
 print('video')
 c=[]
@@ -33,9 +44,10 @@ while(cap.isOpened()):
             boxes= r.boxes
             for box in boxes:
                         #bouding box
-                x1,y1,x2,y2=box.xyxy[0]
+                x1,y1,x2,y2=box.xyxy[0].tolist()
+                x,y,w,h=box.xywh[0].tolist()
                 x1,y1,x2,y2=int(x1),int(y1),int(x2),int(y2)
-                
+                x,y,w,h=int(x),int(y),int(w),int(h)
                 cv2.rectangle(frame,(x1,y1),(x2,y2),(255,0,255),3)
                         #confidence
                 conf=math.ceil((box.conf[0]*100))/100
@@ -45,10 +57,21 @@ while(cap.isOpened()):
                 
                 name=model.names[cls]
                 
-                cvzone.putTextRect(frame,f'{name} {conf}',(max(35,x1),max(35,y1)),scale=1,thickness=1)
+                cvzone.putTextRect(frame,f'{name} {conf}',(max(0,x1),max(35,y1)),scale=1,thickness=1)
                 c.append(name)
+                box = np.array([
+                x, 
+                y, 
+                x + w, 
+                y + h
+            ])
                 #cv2.imshow('frame',frame)
+                
+                
 
+                
+                
+                cv2.imshow('frame',frame)
         # Exit the loop if the 'q' key is pressed or if the video ends
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -69,7 +92,7 @@ cv2.destroyAllWindows()"""
 
 
 
-def annotation(folder):
+"""def annotation(folder):
     # Load YOLOv8 model
     model = YOLO("yolov8m.pt")
 
@@ -145,9 +168,6 @@ def annotation(folder):
         cap.release()
         cap_out.release()
     # Write results to a JSON file
-    """with open('results.json', 'w') as f:
-        json.dump(res, f)
-    with open('results.json', 'r') as f:
-        json_data = f.read()"""
-    return res
+   
+    return res"""
     

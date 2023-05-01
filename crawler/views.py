@@ -9,11 +9,13 @@ from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
 import pytz
 
-from crawler.annotation import annotation
+
+
 
 
 
 django.setup()
+
 import os
 from crawler.tasks import download_videos
 from django import apps
@@ -35,6 +37,7 @@ from django.views.decorators.csrf import csrf_exempt
 import pytube
 import schedule
 import time
+
 from django.core import serializers
 
 def run_spider(query,max_items,duration):
@@ -85,6 +88,8 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
+            print("!!!!!!!!!")
+            print(data)
             c=0
              # get the time when the form was submitted
             for item in data:
@@ -267,9 +272,9 @@ def update(request):
                             video_path = stream.download(output_path=f)
                             print(video_path)
                             downloaded_videos.append(video_path)
-                            json_a=annotation(instance.folder)
+                            #json_a=annotate(instance.folder)
 
-                            instance.annotations_dic=json_a
+                            #instance.annotations_dic=json_a
                             
                             instance.save()
 
@@ -280,8 +285,8 @@ def update(request):
                             video_path = stream.download(output_path=f)
                             print(video_path)
                             downloaded_videos.append(video_path)
-                            json_a=annotation(instance.folder)
-                            instance.annotations_dic=json_a
+                            #json_a=annotate(instance.folder)
+                            #instance.annotations_dic=json_a
                             instance.save()
                 else:
                     messages.error(request, 'the dataset is not  completed !')

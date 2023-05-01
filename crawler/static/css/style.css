@@ -513,6 +513,10 @@ margin:10px;
     box-shadow: none;
   }
   .table th:hover {
-    background-color: #7589a0;
+    background-color: #7589a0 !important;
+    cursor: pointer;
+  }
+  .table tr:hover {
+    background-color: #dee1e4 !important;
     cursor: pointer;
   }

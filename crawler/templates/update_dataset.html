@@ -25,27 +25,22 @@
   <tr class="tr_style">
       <th class='cur'>ID</th>
       <th class='cur'>Name</th>
-      <th class='cur'>description</th>
-      <th class='cur'>min video</th>
-      <th class='cur'>max video</th>
-      <th class='cur'>video number</th>
-      <th class='cur'>creation data</th>
+      
       <th class="cur">status</th>
       <th class='cur'>action</th>
     </tr>
     
     {% for item in data %}
-        <tr >
+    
+        <tr data-bs-toggle="modal" data-bs-target="#exampleModal"  data-bs-whatever="{{ item.id }}" >
           
           
-            <td>
-              {{ item.id }}</td>
+            <td >
+              {{ item.id }} </td>
             <td >{{ item.name }}</td>
-            <td >{{item.description}}</td>
-            <td >{{ item.min_v }}</td>
-            <td >{{ item.max_v }}</td>
-            <td>{{item.num_video}}</td>
-            <td>{{item.creation_date}}</td>
+            
+            
+            
             <td {% if item.status == "in progress" %} style="background-color: #d35400;"{% elif item.status == "completed" %} style="background-color: #63cda8;"{% endif %}>{{ item.status }}</td>
     
             <td >
@@ -61,10 +56,57 @@
             
             
         </tr>
-    {% endfor %}
+        
+        {% endfor %}
 
 </table>
-</div>
-  
+
+  </div>
     
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">configuration</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+          <h1>{{ item.name }}</h1>
+          <ul>
+            <li>ID:<span class="info">{{ item.id }}</span> </li>
+            
+            <li>creation date:<span class="info">{{item.creation_date}}</span></li>
+            <li>number of videos:<span class="info">{{item.num_video}}</span></li>
+            <li>minimum number of videos:<span class="info">{{item.min_v}}</span></li>
+            <li>maximum number of videos:<span class="info">{{item.max_v}}</span></li>
+            <li>desired number of videos:<span class="info">{{item.desired_num}}</span></li>
+            <li>status:<span class="info">{{ item.status }}</span></li>
+            <li>author:<span class="info">{{ item.author }}</span></li>
+            <li>folder path:<span class="info">{{ item.folder }}</span></li>
+            <li>description:<span class="info">{{item.description}}</span></li>
+          </ul>
+          <h1>List of videos:</h1>
+          <ul>
+            <li></li>
+          </ul>
+         
+                
+                
+              
+              
+          </div>
+            </div>
+        
+        
+      
+      
+    </div>
+  </div>
+</div>
+
+
+
 {% endblock %}
