@@ -1,0 +1,72 @@
+{% load static %}
+<style>
+/* Style for the heading */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Style for the unordered list */
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Style for the list items */
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* Style for the labels */
+li span {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+/* Style for the dataset information */
+.info {
+  color: #555;
+}
+
+
+</style>
+<h1>{{ dataset.name }}</h1>
+<ul>
+  <li>ID: <span class="info">{{ dataset.id }}</span></li>
+  <li>Creation date: <span class="info">{{ dataset.creation_date }}</span></li>
+  <li>Number of videos: <span class="info">{{ dataset.num_video }}</span></li>
+  <li>Minimum number of videos: <span class="info">{{ dataset.min_v }}</span></li>
+  <li>Maximum number of videos: <span class="info">{{ dataset.max_v }}</span></li>
+  <li>Desired number of videos: <span class="info">{{ dataset.desired_num }}</span></li>
+  <li>Status: <span class="info">{{ dataset.status }}</span></li>
+  <li>Author: <span class="info">{{ dataset.author }}</span></li>
+  <li>Folder path: <span class="info">{{ dataset.folder }}</span></li>
+  <li>Description: <span class="info">{{ dataset.description }}</span></li>
+</ul>
+<h1>videos:</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>   </th>
+        <th class='cur'>ID</th>
+        <th class='cur'>Name</th>
+        <th class='cur'>Duration</th>
+        <th class='cur'>description</th>
+        <th class='cur'>url</th>
+        
+      </tr>
+      
+      {% for item in videos %}
+          <tr >
+            <td><input type="checkbox"  name="selected_elements" value="{{ item.id }}"></td>
+              <td>{{ item.id }}</td>
+              <td >{{ item.title }}</td>
+              <td >{{ item.duration }}</td>
+              <td >{{item.description}}</td>
+              <td >{{ item.url }}</td>
+
+              
+         
+        </tr>
+        {% endfor %}
+</table>

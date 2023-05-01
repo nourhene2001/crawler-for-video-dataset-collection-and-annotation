@@ -15,7 +15,7 @@ import pytz
 
 
 django.setup()
-
+from django.template.loader import render_to_string
 import os
 from crawler.tasks import download_videos
 from django import apps
@@ -63,6 +63,18 @@ def update_dataset(request):
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False})"""
+def get_dataset_info(request):
+    # Get the item_id from the AJAX request
+    item_id = request.GET.get('item_id')
+
+    # Get the dataset information for the item_id
+    dataset = datasetModel.objects.get(id=item_id)
+    videos = dataset.videos.all()
+    # Render the dataset information using a template
+    html = render_to_string('dataset_info.html', {'dataset': dataset,'videos':videos})
+
+    # Return a JSON response with the HTML template
+    return JsonResponse({'html': html})
 @login_required
 def display_dataset(request):
     data=datasetModel.objects.all()
@@ -88,7 +100,7 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
-            print("!!!!!!!!!")
+            print("!!!!!!!!!é")
             print(data)
             c=0
              # get the time when the form was submitted

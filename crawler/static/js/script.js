@@ -92,6 +92,22 @@ function editField(event, itemId, fieldName, fieldValue) {
       }
     };
   }
+  function show(itemId) {
+    $.ajax({
+      url: '/get_dataset_info/',
+      data: {
+        'item_id': itemId
+      },
+      dataType: 'json',
+      success: function(data) {
+        // Update the modal content with the dataset information
+        $('#modal-body').html(data.html);
+        // Show the modal
+        $('#exampleModal').modal('show');
+      }
+    });
+  }
+  
   
   
   
