@@ -1,4 +1,6 @@
+import json
 import os
+import subprocess
 import scrapy
 import pytube
 from pytube import YouTube
@@ -84,10 +86,29 @@ class YoutubeSpider(scrapy.Spider):
         except pytube.exceptions.VideoUnavailable:
         # Handle the exception - skip this video
             print(f"Video at URL  is unavailable. Skipping...")
+            
+        yield items
         #stream = yt.streams.get_highest_resolution()
         #stream=yt.streams.filter(file_extension='self.video_format')
         # Download the video
         #stream.download()
-        yield items
+        
+    """def parse_video(self, response):
+        items=ScrapeItem()
+        #url response from parse method
+        try:
+            video_url = response.url
+            output = subprocess.check_output(['youtube-dl', '-J', video_url]).decode('utf-8')
+            metadata = json.loads(output)
+            items['id_vid'] = metadata['id']
+            items['title'] = metadata['title']
+            items['views'] = metadata['view_count']
+            items['duration'] = metadata['duration']
+            items['description'] = metadata['description']
+            items['url'] = video_url
+        except subprocess.CalledProcessError:
+            print(f"Error: Failed to extract metadata for {video_url}")
+        yield items"""
+
         
 

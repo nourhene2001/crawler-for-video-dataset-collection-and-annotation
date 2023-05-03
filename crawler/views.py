@@ -8,6 +8,10 @@ import json
 from django.http import HttpResponse, JsonResponse
 from httplib2 import Authentication
 import pytz
+from requests import HTTPError
+
+from crawler.annotate_try2 import annotate_vid
+
 
 
 
@@ -15,6 +19,8 @@ import pytz
 
 
 django.setup()
+import urllib.request
+import urllib.error
 from django.template.loader import render_to_string
 import os
 from crawler.tasks import download_videos
@@ -100,8 +106,8 @@ def search(request):
             json_path = os.path.join(os.getcwd(), '', 'data.json')
             with open(json_path,encoding='utf-8') as f:
                 data = json.load(f)
-            print("!!!!!!!!!é")
-            print(data)
+            
+            
             c=0
              # get the time when the form was submitted
             for item in data:
@@ -273,33 +279,50 @@ def update(request):
                 if instance.status=='completed' or instance.desired_num==instance.num_video:
                     videos = instance.videos.all()
                     downloaded_videos = []
+                    fi=instance.folder+"\\"+instance.name
+                    f=instance.folder+"\\"+instance.name+"\\videos"
+                    i=0
                     for video in videos:
-                        yt = pytube.YouTube(video.url)
                         
+                        yt = pytube.YouTube(video.url)
                         stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
-                        if stream is not None:
-                            print("!!!!!!!!!!!!")
-                            print(stream)
-                            f=instance.folder+"\\before"
-                            video_path = stream.download(output_path=f)
-                            print(video_path)
-                            downloaded_videos.append(video_path)
-                            #json_a=annotate(instance.folder)
-
-                            #instance.annotations_dic=json_a
-                            
-                            instance.save()
-
-                        else:
-                            print("???????")
+                        if stream is None:
                             stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
-                            f=instance.folder+"\\before"
-                            video_path = stream.download(output_path=f)
-                            print(video_path)
-                            downloaded_videos.append(video_path)
-                            #json_a=annotate(instance.folder)
-                            #instance.annotations_dic=json_a
+                        if stream is not None:
+                            try:
+                                video_path = stream.download(output_path=f)
+                                
+                            except Exception:
+                                # Get the list of all files in the folder and sort them by creation time
+                                all_files = os.listdir(f)
+                                all_files.sort(key=lambda x: os.path.getctime(os.path.join(f, x)))
+
+                                # Get the latest added file and delete it
+                                latest_file = os.path.join(f, all_files[-1])
+                                os.remove(latest_file)
+                                
+                                continue
+                                # Rename the downloaded video file to i+1
+                            i=i+1
+                            new_video_path = os.path.join(f, f"{i}.{videoformat}")
+                            
+                            os.rename(video_path, new_video_path)
+
+                            downloaded_videos.append(new_video_path)
+                            annotate_vid(fi)
                             instance.save()
+                                
+                            
+                        else:
+                            
+                            continue
+
+                    
+                            
+                            
+                            
+
+                        
                 else:
                     messages.error(request, 'the dataset is not  completed !')
                     return render(request, 'update_dataset2.html')
@@ -378,23 +401,22 @@ def update(request):
 #after result page choose
 @login_required
 def choice_d(request):
-    form = dataForm()
+    
     form2=datasetForm3()
     if request.method=='POST':
         print("MMMMMMMMMMMMMMMM")
-        form=dataForm(request.POST)
+        
         form2=datasetForm3(request.POST)
         selected_elements = request.POST.getlist('selected_elements')
         print(selected_elements)
-        if form.is_valid():
-            print("jjjjjjjjjjjMMMMMMMMjjjjjjjj")
-            videoformat = form.cleaned_data['videoformat']
-            resolution = form.cleaned_data['resolution']
-            selected_data=dataModel.objects.filter(id__in=selected_elements)
-            print("jjjjjjjjjjjjjjjjjjjjjjjjj")
-            print(selected_data)
-            selected_data.update(videoformat=videoformat, resolution=resolution)
-            if form2.is_valid():
+        
+        print("jjjjjjjjjjjMMMMMMMMjjjjjjjj")
+            
+        selected_data=dataModel.objects.filter(id__in=selected_elements)
+        print("jjjjjjjjjjjjjjjjjjjjjjjjj")
+        print(selected_data)
+            
+        if form2.is_valid():
                 name=form2.cleaned_data.get('form3_name')
                 model=datasetModel.objects.get(name=name)
                 if int(model.max_v) > selected_data.count()+int(model.num_video) and int(model.min_v) < selected_data.count()+int(model.num_video) and int(model.desired_num) > selected_data.count()+int(model.num_video):

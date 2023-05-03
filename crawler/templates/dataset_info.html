@@ -1,4 +1,4 @@
-{% load static %}
+
 <style>
 /* Style for the heading */
 h1 {
@@ -28,26 +28,34 @@ li span {
 .info {
   color: #555;
 }
-
+#v {
+  max-height: 200px !important; /* set a maximum height for the table */
+  overflow-y: auto !important; /* add a vertical scrollbar if the content exceeds the height */
+}
 
 </style>
 <h1>{{ dataset.name }}</h1>
-<ul>
-  <li>ID: <span class="info">{{ dataset.id }}</span></li>
-  <li>Creation date: <span class="info">{{ dataset.creation_date }}</span></li>
-  <li>Number of videos: <span class="info">{{ dataset.num_video }}</span></li>
-  <li>Minimum number of videos: <span class="info">{{ dataset.min_v }}</span></li>
-  <li>Maximum number of videos: <span class="info">{{ dataset.max_v }}</span></li>
-  <li>Desired number of videos: <span class="info">{{ dataset.desired_num }}</span></li>
-  <li>Status: <span class="info">{{ dataset.status }}</span></li>
-  <li>Author: <span class="info">{{ dataset.author }}</span></li>
-  <li>Folder path: <span class="info">{{ dataset.folder }}</span></li>
-  <li>Description: <span class="info">{{ dataset.description }}</span></li>
-</ul>
+<table class="table table-bordered" >
+  
+  <tr><td>dataset ID </td><td><span class="info">{{ dataset.id }}</span></td>
+    <tr><td>dataset status </td><td><span class="info">{{ dataset.status }}</span></td>
+      <tr><td>creationdate: </td><td><span class="info">{{ dataset.creation_date }}</span></td>
+        <tr><td>number of videos: </td><td><span class="info">{{ dataset.num_video }}</span></td>
+          <tr><td>minimun number of videos </td><td><span class="info">{{ dataset.min_v }}</span></td>
+            <tr><td>maximum number of videos</td><td><span class="info">{{ dataset.max_v }}</span></td>
+              <tr><td>desired number of videos</td><td><span class="info">{{ dataset.desired_num }}</span></td>
+
+                <tr><td>author </td><td><span class="info">{{ dataset.author }}</span></td>
+                  <tr><td>folder path </td><td><span class="info">{{ dataset.folder }}</span></td>
+                    <tr><td>Description </td><td><span class="info">{{ dataset.description }}</span></td>
+  
+  
+</table>
 <h1>videos:</h1>
-<table class="table table-bordered">
+<div id="v">
+<table  class="table table-bordered">
     <tr>
-        <th>   </th>
+        
         <th class='cur'>ID</th>
         <th class='cur'>Name</th>
         <th class='cur'>Duration</th>
@@ -58,7 +66,7 @@ li span {
       
       {% for item in videos %}
           <tr >
-            <td><input type="checkbox"  name="selected_elements" value="{{ item.id }}"></td>
+            
               <td>{{ item.id }}</td>
               <td >{{ item.title }}</td>
               <td >{{ item.duration }}</td>
@@ -70,3 +78,4 @@ li span {
         </tr>
         {% endfor %}
 </table>
+</div>
