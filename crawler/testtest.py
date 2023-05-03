@@ -1,5 +1,6 @@
 #craete project in roboflow with yolo for object detection
 #add frame
+import json
 import math
 import cv2
 import roboflow
@@ -28,6 +29,18 @@ cap_out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'),cap.get(c
 frame_count = 0
 # Initialize an empty dictionary to store the object timestamps
 object_timestamps = {}
+data = {
+    "info": {
+        "description": "Video annotation using YOLO model",
+        "year": 2023,
+        "version": "1.0",
+        "contributor": "Your Name",
+        "date_created": "2023-05-04"
+    },
+    "images": [],
+    "annotations": [],
+    "categories": []
+}
 while (cap.isOpened()):
     # Read the next frame
     ret, frame = cap.read()
@@ -75,7 +88,44 @@ while (cap.isOpened()):
         'object timestamps':object_timestamps,
         })
     
-    
+
+        # Append the prediction to the list
+
+
+    categories = []
+    for p in predictions_list:
+        for pred in p['predictions']['predictions']:
+            if pred['class'] not in categories:
+                categories.append(pred['class'])
+
+    data['categories'] = [{"id": i+1, "name": c} for i, c in enumerate(categories)]
+
+    for p in predictions_list:
+        filename = "frame_{:04d}.jpg".format(p['frame'])
+        data['images'].append({
+            "id": p['frame'],
+            "width": p['predictions']['image']['width'],
+            "height": p['predictions']['image']['height'],
+            "file_name": filename,
+            "date_captured": "2023-05-04"
+            })
+
+        for pred in p['predictions']['predictions']:
+            category_id = categories.index(pred['class']) + 1
+            bbox = (int(x0), int(y0),int(x1), int(y1))
+            annotation = {
+                    "id": len(data['annotations']) + 1,
+                    "image_id": p['frame'],
+                    "category_id": category_id,
+                    "bbox": bbox,
+                    "area": bbox[2] * bbox[3],
+                    "iscrowd": 0,
+                    "attributes": {},
+                    "timestamp": p['object timestamps'][pred['class']][-1]
+                }
+            data['annotations'].append(annotation)
+
+
    
 
 
@@ -91,58 +141,10 @@ print(object_timestamps)
 cap.release()
 cap_out.release()
 cv2.destroyAllWindows()
-import json
-
-data = {
-    "info": {
-        "description": "Video annotation using YOLO model",
-        "year": 2023,
-        "version": "1.0",
-        "contributor": "Your Name",
-        "date_created": "2023-05-04"
-    },
-    "images": [],
-    "annotations": [],
-    "categories": []
-}
-        # Append the prediction to the list
-
-
-categories = []
-for p in predictions_list:
-    for pred in p['predictions']['predictions']:
-        if pred['class'] not in categories:
-            categories.append(pred['class'])
-
-data['categories'] = [{"id": i+1, "name": c} for i, c in enumerate(categories)]
-
-for p in predictions_list:
-    filename = "frame_{:04d}.jpg".format(p['frame'])
-    data['images'].append({
-        "id": p['frame'],
-        "width": p['predictions']['image']['width'],
-        "height": p['predictions']['image']['height'],
-        "file_name": filename,
-        "date_captured": "2023-05-04"
-    })
-
-    for pred in p['predictions']['predictions']:
-        category_id = categories.index(pred['class']) + 1
-        bbox = pred['xmin'], pred['ymin'], pred['width'], pred['height']
-        annotation = {
-            "id": len(data['annotations']) + 1,
-            "image_id": p['frame'],
-            "category_id": category_id,
-            "bbox": bbox,
-            "area": bbox[2] * bbox[3],
-            "iscrowd": 0,
-            "attributes": {},
-            "timestamp": p['object timestamps'][pred['class']][-1]
-        }
-        data['annotations'].append(annotation)
-
 with open('annotations.json', 'w') as f:
     json.dump(data, f)
+
+
 
 """workspace = Roboflow(api_key='vt1WopMNT1DHN0D3Ml56').workspace()
 new_project = workspace.create_project(

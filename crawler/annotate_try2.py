@@ -13,7 +13,7 @@ from segment_anything import sam_model_registry
 from segment_anything import SamPredictor
 import supervision as sv
 
-def annotate_vid(path):
+def annotate_vid(path,author,duration,views):
 
     DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     MODEL_TYPE = "vit_h"
