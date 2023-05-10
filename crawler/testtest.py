@@ -11,7 +11,7 @@ rf = Roboflow(api_key="vt1WopMNT1DHN0D3Ml56")
 project = rf.workspace().project("yolo-m1mve")
 model = project.version(1).model
 # Open the video file
-video_path = "crawler\cats.mp4"
+video_path = "crawler\\1.mp4"
 #cap = cv2.VideoCapture(video_path)
 cap = cv2.VideoCapture(video_path)
 
@@ -31,15 +31,17 @@ frame_count = 0
 object_timestamps = {}
 data = {
     "info": {
+        "video name":"1.pm4",
         "description": "Video annotation using YOLO model",
         "year": 2023,
         "version": "1.0",
-        "contributor": "Your Name",
-        "date_created": "2023-05-04"
+        "contributor": "nourhene",
+        "date_created": "2023-05-04",
+        "duration in seconds" : "6"
     },
-    "images": [],
+    "video": [],
     "annotations": [],
-    "categories": []
+    "timestamps": []
 }
 while (cap.isOpened()):
     # Read the next frame
@@ -51,8 +53,15 @@ while (cap.isOpened()):
     frame_path = os.path.join(save_path, f"frame_{frame_count:04d}.jpg")
     cv2.imwrite(frame_path, frame)
     
-    predictions=model.predict(frame_path, confidence=60, overlap=30).json()
+    predictions=model.predict(frame_path, confidence=80, overlap=30).json()
     print(predictions)
+    wh=[]
+    wh.append({
+            
+            "width": predictions['image']['width'],
+            "height": predictions['image']['height'],
+            
+            })
     # Increment the frame count
     frame_count += 1
     frame_t = cv2.imread(frame_path)
@@ -70,7 +79,7 @@ while (cap.isOpened()):
         conf = math.ceil(conf*100)/100
         cvzone.putTextRect(frame_t, f'{conf} {classe}', (int(x0)-5, int(y0)-10), scale=1, thickness=1)
         timestamp = frame_count / cap.get(cv2.CAP_PROP_FPS)
-        predictions_list=[]
+        
         
         # Check if this object has been seen before
         object_id = f"{classe}"
@@ -80,61 +89,50 @@ while (cap.isOpened()):
         else:
             # This is a new object, add it to the dictionary
             object_timestamps[object_id] = [(timestamp, timestamp)]
+        predictions_list=[]
         predictions_list.append({
-        'video name':"cat.mp4",
-        'frame': frame_count,
-        'predictions': predictions,
-        'bounding_boxes': (int(x0), int(y0),int(x1), int(y1)),
-        'object timestamps':object_timestamps,
-        })
-    
-
-        # Append the prediction to the list
-
-
-    categories = []
-    for p in predictions_list:
-        for pred in p['predictions']['predictions']:
-            if pred['class'] not in categories:
-                categories.append(pred['class'])
-
-    data['categories'] = [{"id": i+1, "name": c} for i, c in enumerate(categories)]
-
-    for p in predictions_list:
-        filename = "frame_{:04d}.jpg".format(p['frame'])
-        data['images'].append({
-            "id": p['frame'],
-            "width": p['predictions']['image']['width'],
-            "height": p['predictions']['image']['height'],
-            "file_name": filename,
-            "date_captured": "2023-05-04"
-            })
-
-        for pred in p['predictions']['predictions']:
-            category_id = categories.index(pred['class']) + 1
-            bbox = (int(x0), int(y0),int(x1), int(y1))
-            annotation = {
-                    "id": len(data['annotations']) + 1,
-                    "image_id": p['frame'],
-                    "category_id": category_id,
-                    "bbox": bbox,
-                    "area": bbox[2] * bbox[3],
-                    "iscrowd": 0,
-                    "attributes": {},
-                    "timestamp": p['object timestamps'][pred['class']][-1]
-                }
-            data['annotations'].append(annotation)
-
-
-   
-
-
-            
         
-    cv2.imwrite("example_with_bounding_boxes.jpg", frame_t)
-    cap_out.write(frame_t)
-        # Print the object timestamps
+        'frame': frame_count,
+        'predictions': predictions, 
+        'bounding_boxes': (int(x0), int(y0),int(x1), int(y1)),
+        
+        })
+     
+     
+        # Append the prediction to the list
+        if predictions_list:
+            data['timestamps'] =  object_timestamps
 
+            for p in predictions_list:
+                
+                for pred in p['predictions']['predictions']:
+                    
+                    bbox = (int(x0), int(y0),int(x1), int(y1))
+                    annotation = {
+                                    "id": len(data['annotations']) + 1,
+                                    "frame_id": p['frame'],
+                                    "object":pred['class'],
+                                    "confidence":pred['confidence'],
+                                    "bbox": bbox,
+                                    
+                        }
+                    data['annotations'].append(annotation)
+
+
+
+
+        
+
+
+                    
+                
+            cv2.imwrite("example_with_bounding_boxes.jpg", frame_t)
+            cap_out.write(frame_t)
+        # Print the object timestamps
+data['video'].append({
+    "width": wh[0]['width'],
+    "height": wh[0]['height']
+})
 print(object_timestamps)
     
 # Release the video capture object and close all windows

@@ -13,7 +13,7 @@ from segment_anything import sam_model_registry
 from segment_anything import SamPredictor
 import supervision as sv
 
-def annotate_vid(path,author,duration,views):
+def annotate_vid(path,author,duration,creation_date,resolution,video_format,views,dataset,description_v,description_d):
 
     DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     MODEL_TYPE = "vit_h"
@@ -36,9 +36,9 @@ def annotate_vid(path,author,duration,views):
         cap = cv2.VideoCapture(os.path.join(path+"\\videos", video))
         print("vid extracted")
         
-
+        i=0
         # Define the path to save the frames
-        save_path = "crawler\\temp_img"
+        save_path = f"crawler\\{i+1}"
 
         # Create the directory if it does not exist
         if not os.path.exists(save_path):
@@ -51,6 +51,28 @@ def annotate_vid(path,author,duration,views):
         
         object_timestamps={}
         predictions_list = []
+        data = {
+        "dataset info": {
+            "name":dataset,
+            "description": description_d,
+            "contributor": author,
+            "date_created": f"{creation_date}",
+            "duration in seconds" : duration,
+            "path":path
+        },
+        "video metadata":{
+            "video title":video,
+            "description": description_v,
+            "duration in seconds" : duration,
+            "views":views,
+            "video format":video_format,
+            "resolution":resolution,
+            
+        },
+        "video": [],
+        "annotations": [],
+        "timestamps": []
+    }
         while (cap.isOpened()):
             # Read the next frame
             ret, frame = cap.read()
@@ -61,9 +83,15 @@ def annotate_vid(path,author,duration,views):
             frame_path = os.path.join(save_path, f"frame_{frame_count:04d}.jpg")
             cv2.imwrite(frame_path, frame)
             
-            predictions=model.predict(frame_path, confidence=60, overlap=30).json()
+            predictions=model.predict(frame_path, confidence=80, overlap=30).json()
             print(predictions)
-            
+            wh=[]
+            wh.append({
+                    
+                    "width": predictions['image']['width'],
+                    "height": predictions['image']['height'],
+                    
+                    })            
             # Increment the frame count
             frame_count += 1
             frame_t = cv2.imread(frame_path)
@@ -114,11 +142,12 @@ def annotate_vid(path,author,duration,views):
                 )
                         # Append the prediction to the list
                 predictions_list.append({
-                    'video name':video,
+                    
                     'frame': frame_count,
                     'predictions': predictions,
                     'bounding_boxes': (int(x0), int(y0),int(x1), int(y1)),
-                    'object timestamps':object_timestamps,
+                    
+                    
                 })
 
                 detections = detections[detections.area == np.max(detections.area)]
@@ -130,24 +159,47 @@ def annotate_vid(path,author,duration,views):
                 else: 
                     cv2.imwrite("example_with_bounding_boxes.jpg", frame_t)
                     cap_out.write(frame_t)
+          
+            if predictions_list:
+                data['timestamps'] =  object_timestamps
+                for p in predictions_list:
+                    for pred in p['predictions']['predictions']:
+                        bbox = (int(x0), int(y0),int(x1), int(y1))
+                        annotation = {
+                                "id": len(data['annotations']) + 1,
+                                "frame_id": p['frame'],
+                                "object":pred['class'],
+                                "confidence":pred['confidence'],
+                                "bbox": bbox,
+                                
+
+                            }
+                        data['annotations'].append(annotation)
+                
 
             
             print("done!!!!!")
         # Release the video capture object and close all windows
+        
         cap.release()
         cap_out.release()
         cv2.destroyAllWindows()
-    os.remove(save_path)
+        data['video'].append({
+            "width": wh[0]['width'],
+            "height": wh[0]['height']
+        })
     
     # Extract filename without extension
     filename = os.path.splitext(os.path.basename(video))[0]
     # Specify folder path
     folder_path = path+"\\annotations"
+    os.makedirs(folder_path)
     # Create JSON file path
     json_path = os.path.join(folder_path, filename + ".json")
-
+    
     # Write predictions list to JSON file
+    print(data)
     with open(json_path, 'w') as f:
-        json.dump(predictions_list, f)
+        json.dump(data, f)
 
-    return predictions_list
+    return data

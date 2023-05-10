@@ -18,6 +18,9 @@ app.conf.worker_prefetch_multiplier = 1
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
+
+worker_cancel_long_running_tasks_on_connection_loss = True
+
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 

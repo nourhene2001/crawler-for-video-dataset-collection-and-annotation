@@ -288,6 +288,28 @@ def update(request):
                         stream = yt.streams.filter(res=video.resolution, file_extension=video.videoformat).first()
                         if stream is None:
                             stream = yt.streams.filter(res=video.resolution, file_extension="mp4").first()
+                            try:
+                                video_path = stream.download(output_path=f)
+                                
+                            except Exception:
+                                # Get the list of all files in the folder and sort them by creation time
+                                all_files = os.listdir(f)
+                                all_files.sort(key=lambda x: os.path.getctime(os.path.join(f, x)))
+
+                                # Get the latest added file and delete it
+                                latest_file = os.path.join(f, all_files[-1])
+                                os.remove(latest_file)
+                                
+                                continue
+                                # Rename the downloaded video file to i+1
+                            i=i+1
+                            new_video_path = os.path.join(f, f"{i}.{videoformat}")
+                            
+                            os.rename(video_path, new_video_path)
+
+                            downloaded_videos.append(new_video_path)
+                            annotate_vid(fi,instance.author,video.duration,instance.creation_date,instance.resolution,instance.videoformat,video.views,instance.name,video.description,instance.description)
+                            instance.save()
                         if stream is not None:
                             try:
                                 video_path = stream.download(output_path=f)
@@ -309,7 +331,7 @@ def update(request):
                             os.rename(video_path, new_video_path)
 
                             downloaded_videos.append(new_video_path)
-                            annotate_vid(fi)
+                            annotate_vid(fi,instance.author,video.duration,instance.creation_date,instance.resolution,instance.videoformat,video.views,instance.name,video.description,instance.description)
                             instance.save()
                                 
                             
