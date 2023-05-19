@@ -31,12 +31,13 @@ def annotate_vid(path,author,duration,creation_date,resolution,video_format,view
     print(video_folder)
     output_video = path+"\\annotated_video"
     os.makedirs(output_video)
+    i=0
     for video in video_folder:
         print(video)
         cap = cv2.VideoCapture(os.path.join(path+"\\videos", video))
         print("vid extracted")
         
-        i=0
+        
         # Define the path to save the frames
         save_path = f"crawler\\{i+1}"
 
@@ -189,17 +190,17 @@ def annotate_vid(path,author,duration,creation_date,resolution,video_format,view
             "height": wh[0]['height']
         })
     
-    # Extract filename without extension
-    filename = os.path.splitext(os.path.basename(video))[0]
-    # Specify folder path
-    folder_path = path+"\\annotations"
-    os.makedirs(folder_path)
-    # Create JSON file path
-    json_path = os.path.join(folder_path, filename + ".json")
-    
-    # Write predictions list to JSON file
-    print(data)
-    with open(json_path, 'w') as f:
-        json.dump(data, f)
+        # Extract filename without extension
+        filename = os.path.splitext(os.path.basename(video))[0]
+        # Specify folder path
+        folder_path = path+"\\annotations"
+        os.makedirs(folder_path)
+        # Create JSON file path
+        json_path = os.path.join(folder_path, filename + ".json")
+        
+        # Write predictions list to JSON file
+        print(data)
+        with open(json_path, 'w') as f:
+            json.dump(data, f)
 
     return data

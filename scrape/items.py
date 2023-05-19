@@ -7,7 +7,7 @@ import scrapy
 
 
 class ScrapeItem(scrapy.Item):
-    # define the fields for your item here like:
+    
     id_vid = scrapy.Field()
     title=scrapy.Field()
     views = scrapy.Field()

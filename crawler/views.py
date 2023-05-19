@@ -308,8 +308,8 @@ def update(request):
                             os.rename(video_path, new_video_path)
 
                             downloaded_videos.append(new_video_path)
-                            annotate_vid(fi,instance.author,video.duration,instance.creation_date,instance.resolution,instance.videoformat,video.views,instance.name,video.description,instance.description)
-                            instance.save()
+                            
+                            
                         if stream is not None:
                             try:
                                 video_path = stream.download(output_path=f)
@@ -331,15 +331,15 @@ def update(request):
                             os.rename(video_path, new_video_path)
 
                             downloaded_videos.append(new_video_path)
-                            annotate_vid(fi,instance.author,video.duration,instance.creation_date,instance.resolution,instance.videoformat,video.views,instance.name,video.description,instance.description)
-                            instance.save()
-                                
+                            
                             
                         else:
                             
                             continue
 
-                    
+                    annotate_vid(fi,instance.author,video.duration,instance.creation_date,instance.resolution,instance.videoformat,video.views,instance.name,video.description,instance.description)
+                            
+                                
                             
                             
                             

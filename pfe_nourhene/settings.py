@@ -24,7 +24,7 @@ from pytz import timezone
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+acks_late=True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -39,6 +39,7 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'pfe_nourhene\crawler-380708-9c18
 
 BROKER_CONNECTION_TIMEOUT = 3600
 
+worker_cancel_long_running_tasks_on_connection_loss = True
 
 CELERY_TIMEZONE='Africa/Tunis'
 CELERY_BROKER_URL ='amqp://guest:guest@localhost:5672/'

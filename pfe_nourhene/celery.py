@@ -2,7 +2,7 @@ import os
 
 from celery import Celery
 
-# Set the default Django settings module for the 'celery' program.
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pfe_nourhene.settings')
 
 app = Celery('pfe_nourhene')
@@ -12,16 +12,13 @@ app.conf.broker_connection_max_retries = 3
 app.conf.task_acks_late = True
 app.conf.worker_prefetch_multiplier = 1
 
-# Using a string here means the worker doesn't have to serialize
-# the configuration object to child processes.
-# - namespace='CELERY' means all celery-related configuration keys
-#   should have a `CELERY_` prefix.
+
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 
 worker_cancel_long_running_tasks_on_connection_loss = True
 
-# Load task modules from all registered Django apps.
+acks_late=True
 app.autodiscover_tasks()
 
 
