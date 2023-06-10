@@ -23,7 +23,7 @@ def annotate_vid(path,author,duration,creation_date,resolution,video_format,view
     sam.to(device=DEVICE)
     mask_annotator = sv.MaskAnnotator(color=sv.Color.red())
     print("sam")
-    rf = Roboflow(api_key="vt1WopMNT1DHN0D3Ml56")
+    rf = Roboflow(api_key="")
     project = rf.workspace().project("yolo-m1mve")
     model = project.version(1).model
     print("robo")
