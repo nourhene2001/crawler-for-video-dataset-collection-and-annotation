@@ -22,7 +22,7 @@ class YoutubeSpider(scrapy.Spider):
          
     #start_url should be result of that query
     def start_requests(self):
-        youtube=build('youtube', 'v3', developerKey=os.environ.get('AIzaSyAcqH635cbFPKvQX_66XaMtGxENrGKggeo'))
+        youtube=build('youtube', 'v3', developerKey=os.environ.get('##'))
         
         search_response = youtube.search().list(
         q=self.query,
