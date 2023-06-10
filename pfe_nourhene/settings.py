@@ -29,7 +29,7 @@ acks_late=True
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mh-6p^&-q3s+ny7a2&*nk44c-o@s-gxx$7ew5sj1ij=^v_jyy9'
+SECRET_KEY = '##'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
